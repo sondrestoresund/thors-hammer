@@ -1,0 +1,32 @@
+THOR'S HAMMER - PWA UPDATE INSTRUCTIONS
+========================================
+
+✅ DONE - Download these files:
+- manifest.json (updated with "Thor's Hammer")
+- icon-192.png (Viking logo at 192x192)
+- icon-512.png (Viking logo at 512x512)
+
+📋 TO DO - Update your workout-tracker.html:
+
+1. Replace the old manifest.json and icon files in your folder with the new ones
+
+2. In your HTML <head> section, update this line:
+   <meta name="apple-mobile-web-app-title" content="Workout">
+   
+   TO:
+   <meta name="apple-mobile-web-app-title" content="Thor's Hammer">
+
+3. OPTIONAL - Update the page title in <head>:
+   <title>FORM</title>
+   
+   TO:
+   <title>Thor's Hammer</title>
+
+4. Save and refresh
+
+5. On your phone, DELETE the old app from home screen and re-install:
+   - Open http://10.0.0.135:8000/workout-tracker.html in Safari
+   - Share → Add to Home Screen
+   - Now it shows "Thor's Hammer" with the Viking logo 🔱
+
+Done!
