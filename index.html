@@ -57,9 +57,11 @@ section { padding: 0 16px 20px; }
 .ring-wrap { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
 .ring-wrap svg { transform: rotate(-90deg); }
 .ring-track { fill: none; stroke: var(--cardio-dim); stroke-width: 8; }
-.ring-progress { fill: none; stroke: var(--cardio); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1); }
+.ring-progress { fill: none; stroke: var(--cardio); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1), stroke 0.4s ease; }
+@keyframes ringComplete { 0%,100% { filter: drop-shadow(0 0 4px #a259ff); } 50% { filter: drop-shadow(0 0 12px #a259ff) drop-shadow(0 0 24px #ff6fff); } }
+.ring-progress.complete { animation: ringComplete 1.4s ease-in-out infinite; }
 .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.ring-pct { font-family: var(--font-display); font-size: 22px; font-weight: 900; color: var(--cardio); line-height: 1; letter-spacing: -0.5px; }
+.ring-pct { font-family: var(--font-display); font-size: 22px; font-weight: 900; color: var(--cardio); line-height: 1; letter-spacing: -0.5px; transition: color 0.4s ease; }
 .ring-unit { font-size: 9px; color: var(--muted); letter-spacing: 1px; margin-top: 2px; }
 .cardio-info { flex: 1; min-width: 0; }
 .cardio-title { font-family: var(--font-display); font-size: 17px; font-weight: 800; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -719,8 +721,22 @@ function buildWeekBar() {
 function updateCardioRing() {
   const mins = getWeekCardioMins(), goal = state.cardioGoal;
   const pct = Math.min(1, mins/goal);
-  document.getElementById('ringProgress').style.strokeDashoffset = 264 - pct*264;
-  document.getElementById('ringPct').textContent = Math.round(pct*100)+'%';
+  const pctRound = Math.round(pct*100);
+  const ring = document.getElementById('ringProgress');
+  const ringPctEl = document.getElementById('ringPct');
+  ring.style.strokeDashoffset = 264 - pct*264;
+  ringPctEl.textContent = pctRound+'%';
+  // Color based on progress
+  let ringColor;
+  if (pct >= 1)        { ringColor = '#a259ff'; ring.classList.add('complete'); }
+  else                 { ring.classList.remove('complete');
+    if (pct < 0.50)    ringColor = '#e03030';
+    else if (pct < 0.64) ringColor = '#f97316';
+    else if (pct < 0.85) ringColor = '#eab308';
+    else                 ringColor = '#22c55e';
+  }
+  ring.style.stroke = ringColor;
+  ringPctEl.style.color = ringColor;
   document.getElementById('cardioSubText').textContent = `${mins} / ${goal} min this week`;
   document.getElementById('cardioWeekMins').textContent = mins;
   const ws = weekStartStr();
