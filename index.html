@@ -740,9 +740,14 @@ function updateCardioRing() {
   ringPctEl.style.color = ringColor;
   document.getElementById('cardioSubText').textContent = `${mins} / ${goal} min this week`;
   document.getElementById('cardioWeekMins').textContent = mins;
-  const ws = weekStartStr();
-  const sessions = state.cardio.filter(c=>c.date>=ws);
-  let dots=''; for (let i=0;i<7;i++) dots+=`<div class="session-dot${i<sessions.length?' done':''}"></div>`;
+  const wsDate = getWeekStart();
+  const cardioDays = new Set(state.cardio.filter(c=>c.date>=weekStartStr()).map(c=>c.date));
+  let dots='';
+  for (let i=0;i<7;i++) {
+    const d = new Date(wsDate); d.setDate(wsDate.getDate()+i);
+    const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    dots+=`<div class="session-dot${cardioDays.has(ds)?' done':''}"></div>`;
+  }
   document.getElementById('cardioDotsRow').innerHTML = dots;
 }
 
