@@ -206,6 +206,13 @@ section { padding: 0 16px 20px; }
 .exercise-chip { border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); border-radius: 999px; padding: 7px 10px; font-family: var(--font-display); font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; cursor: pointer; }
 .exercise-chip:hover { background: rgba(255,255,255,0.1); }
 .exercise-helper { font-size: 10px; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
+.exercise-search-wrap { position: relative; }
+.exercise-dropdown { position: absolute; left: 0; right: 0; top: calc(100% - 2px); background: #181818; border: 1px solid rgba(255,255,255,0.12); border-top: none; border-radius: 0 0 var(--r-sm) var(--r-sm); overflow: hidden; z-index: 20; box-shadow: 0 16px 30px rgba(0,0,0,0.25); }
+.exercise-option { display: flex; justify-content: space-between; gap: 8px; align-items: center; padding: 10px 12px; cursor: pointer; border-top: 1px solid rgba(255,255,255,0.06); }
+.exercise-option:first-child { border-top: none; }
+.exercise-option-name { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: #fff; }
+.exercise-option-meta { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.exercise-option:hover { background: rgba(255,255,255,0.06); }
 
 .history-entry { background: #111111; border-radius: var(--r); padding: 14px 14px 12px; margin-bottom: 8px; }
 .history-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
@@ -213,9 +220,17 @@ section { padding: 0 16px 20px; }
 .history-full-date { font-size: 10px; color: var(--muted); font-family: var(--font-body); font-weight: 400; margin-left: 6px; text-transform: none; letter-spacing: 0; }
 .history-meta { font-size: 11px; color: rgba(255,255,255,0.6); line-height: 1.4; }
 .history-exercises { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.07); }
-.history-ex-row { font-size: 11px; margin-bottom: 3px; }
+.history-ex-row { font-size: 11px; margin-bottom: 6px; display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
 .history-ex-name { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; color: rgba(255,255,255,0.85); }
 .history-ex-sets { color: var(--muted); font-size: 10px; }
+.history-ex-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.mini-action { border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); font-family: var(--font-display); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; border-radius: 999px; padding: 4px 8px; cursor: pointer; }
+.mini-action.danger { border-color: rgba(204,34,0,0.5); color: #ff8b76; }
+.history-cardio-block { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.07); }
+.history-cardio-row { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; padding: 9px 10px; border-radius: var(--r-sm); background: rgba(204,34,0,0.08); margin-bottom: 6px; }
+.history-cardio-row:last-child { margin-bottom: 0; }
+.history-cardio-main { font-family: var(--font-display); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+.history-cardio-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
 .ex-history { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); }
 .ex-history-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 8px; font-weight: 600; }
@@ -234,28 +249,36 @@ section { padding: 0 16px 20px; }
 .data-actions .btn { flex: 1; }
 .settings-note { font-size: 10px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
 
-.analytics-shell { display: none; min-height: 100vh; max-width: 480px; margin: 0 auto; padding: max(52px, calc(env(safe-area-inset-top) + 20px)) 16px calc(32px + env(safe-area-inset-bottom)); background: #111111; }
+.analytics-shell { display: none; min-height: 100vh; max-width: 480px; margin: 0 auto; padding: max(52px, calc(env(safe-area-inset-top) + 20px)) 16px calc(32px + env(safe-area-inset-bottom)); background: radial-gradient(circle at top, rgba(162,89,255,0.16), transparent 28%), #111111; }
 .analytics-shell.active { display: block; }
 .analytics-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
 .analytics-title { font-family: var(--font-display); font-size: 40px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; color: #fff; }
 .analytics-sub { color: rgba(255,255,255,0.45); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; }
 .analytics-section { margin-bottom: 18px; }
+.analytics-hero { background: linear-gradient(135deg, rgba(162,89,255,0.18), rgba(74,222,128,0.12)); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r); padding: 16px; margin-bottom: 10px; }
+.analytics-hero-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+.analytics-hero-copy { color: rgba(255,255,255,0.7); font-size: 12px; line-height: 1.5; }
 .analytics-card { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r); padding: 14px; margin-bottom: 10px; }
 .analytics-card h3 { font-family: var(--font-display); font-size: 16px; font-weight: 800; letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 8px; }
 .analytics-card p { color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.5; }
 .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.analytics-stat { background: #111111; border-radius: var(--r-sm); padding: 12px; border: 1px solid rgba(255,255,255,0.08); }
+.analytics-stat { background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border-radius: var(--r-sm); padding: 12px; border: 1px solid rgba(255,255,255,0.08); }
 .analytics-stat-value { font-family: var(--font-display); font-size: 30px; font-weight: 900; letter-spacing: -0.8px; }
 .analytics-stat-label { font-size: 9px; color: rgba(255,255,255,0.45); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+.analytics-kicker { font-size: 9px; color: rgba(255,255,255,0.45); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; }
 .exercise-analytics-row, .cardio-analytics-row { background: #111111; border-radius: var(--r-sm); border: 1px solid rgba(255,255,255,0.08); padding: 12px; margin-bottom: 8px; }
 .exercise-analytics-title, .cardio-analytics-title { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; margin-bottom: 8px; }
 .exercise-analytics-name, .cardio-analytics-name { font-family: var(--font-display); font-size: 15px; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase; }
 .exercise-analytics-muscle, .cardio-analytics-meta { font-size: 10px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1.2px; }
-.trend-line { display: flex; align-items: flex-end; gap: 4px; height: 80px; margin-top: 8px; }
-.trend-bar { flex: 1; min-width: 0; background: linear-gradient(to top, rgba(74,222,128,0.9), rgba(74,222,128,0.35)); border-radius: 2px 2px 0 0; position: relative; }
-.trend-bar.cardio { background: linear-gradient(to top, rgba(204,34,0,0.9), rgba(204,34,0,0.35)); }
+.analytics-summary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.analytics-summary-pill { padding: 10px 12px; border-radius: var(--r-sm); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+.analytics-summary-val { font-family: var(--font-display); font-size: 22px; font-weight: 800; }
+.analytics-summary-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 3px; }
+.trend-line { display: flex; align-items: flex-end; gap: 4px; height: 80px; margin-top: 8px; padding-top: 18px; }
+.trend-bar { flex: 1; min-width: 0; background: linear-gradient(to top, rgba(74,222,128,0.95), rgba(74,222,128,0.28)); border-radius: 2px 2px 0 0; position: relative; }
+.trend-bar.cardio { background: linear-gradient(to top, rgba(204,34,0,0.95), rgba(204,34,0,0.3)); }
 .trend-bar-label { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); font-size: 8px; color: rgba(255,255,255,0.35); text-transform: uppercase; }
-.trend-bar-value { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-size: 8px; color: rgba(255,255,255,0.65); font-family: var(--font-display); }
+.trend-bar-value { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-size: 8px; color: rgba(255,255,255,0.75); font-family: var(--font-display); white-space: nowrap; }
 .analytics-empty { color: rgba(255,255,255,0.35); font-size: 12px; text-align: center; padding: 24px 10px; }
 .hidden { display: none !important; }
 .section-header { display: flex; justify-content: space-between; align-items: center; padding: 0 0 10px; }
@@ -370,8 +393,10 @@ section { padding: 0 16px 20px; }
     </div>
     <button class="btn" onclick="showView('main')">Back</button>
   </div>
+  <div class="analytics-hero" id="analyticsHero"></div>
   <div class="analytics-section">
     <div class="analytics-grid" id="analyticsStats"></div>
+    <div class="analytics-summary-row" id="analyticsSummaryRow"></div>
   </div>
   <div class="analytics-section">
     <div class="analytics-card">
@@ -412,7 +437,10 @@ section { padding: 0 16px 20px; }
       <div id="exSection" class="hidden ex-section">
         <div class="exercise-helper" id="exerciseHelperText">Select one or more muscles to unlock saved exercise suggestions.</div>
         <div class="exercise-suggestions" id="exerciseSuggestionChips"></div>
-        <input class="ex-name-input" list="exerciseSuggestions" type="text" id="exName" placeholder="Exercise name (e.g. Bench press)"/>
+        <div class="exercise-search-wrap">
+          <input class="ex-name-input" list="exerciseSuggestions" type="text" id="exName" placeholder="Exercise name (e.g. Bench press)" autocomplete="off"/>
+          <div class="exercise-dropdown hidden" id="exerciseDropdown"></div>
+        </div>
         <datalist id="exerciseSuggestions"></datalist>
         <div class="ex-fields-row">
           <div class="ex-field">
@@ -632,6 +660,9 @@ let exSectionOpen = false;
 let historyExpanded = false;
 let weekOffset = 0;
 let selectedDay = null;
+let exerciseAutocomplete = [];
+let editingExerciseRef = null;
+let editingCardioIdx = null;
 
 function todayStr() {
   const d = new Date();
@@ -1027,6 +1058,15 @@ function toggleExSection() {
   document.getElementById('exToggleBtn').textContent = exSectionOpen ? '− Collapse' : '+ Add';
   if (exSectionOpen) updateExerciseSuggestionsUI();
 }
+function resetExerciseInputs() {
+  document.getElementById('exName').value = '';
+  document.getElementById('exWeight').value = '';
+  document.getElementById('exReps').value = '';
+  document.getElementById('exSets').value = '3';
+  editingExerciseRef = null;
+  document.querySelector('#exSection .btn.btn-primary').textContent = 'Add';
+  updateExerciseDropdown();
+}
 function addExercise() {
   const name = document.getElementById('exName').value.trim();
   const weight = parseFloat(document.getElementById('exWeight').value) || 0;
@@ -1035,21 +1075,30 @@ function addExercise() {
   if (!name) { document.getElementById('exName').focus(); return; }
   if (!reps) { document.getElementById('exReps').focus(); return; }
   const setsArr = Array.from({length:sets}, ()=>({weight, reps}));
-  modalExercises.push({ name, sets:setsArr });
-  document.getElementById('exName').value = '';
-  document.getElementById('exWeight').value = '';
-  document.getElementById('exReps').value = '';
-  document.getElementById('exSets').value = '3';
+  if (editingExerciseRef !== null) modalExercises[editingExerciseRef] = { name, sets:setsArr };
+  else modalExercises.push({ name, sets:setsArr });
+  resetExerciseInputs();
   renderModalExercises();
 }
-function removeModalExercise(idx) { modalExercises.splice(idx,1); renderModalExercises(); }
+function editModalExercise(idx) {
+  const ex = modalExercises[idx];
+  if (!ex) return;
+  editingExerciseRef = idx;
+  document.getElementById('exName').value = ex.name;
+  document.getElementById('exWeight').value = ex.sets?.[0]?.weight || '';
+  document.getElementById('exReps').value = ex.sets?.[0]?.reps || '';
+  document.getElementById('exSets').value = ex.sets?.length || 3;
+  document.querySelector('#exSection .btn.btn-primary').textContent = 'Update';
+  updateExerciseDropdown();
+}
+function removeModalExercise(idx) { modalExercises.splice(idx,1); if (editingExerciseRef === idx) resetExerciseInputs(); renderModalExercises(); }
 function renderModalExercises() {
   const list = document.getElementById('exList');
   if (!modalExercises.length) { list.innerHTML=''; return; }
   list.innerHTML = modalExercises.map((ex,i) => {
     const s = ex.sets[0];
     const detail = `${ex.sets.length} sets × ${s.reps} reps${s.weight?` @ ${s.weight}${state.weightUnit}`:''}`;
-    return `<div class="logged-ex"><div><div class="logged-ex-name">${ex.name}</div><div class="logged-ex-detail">${detail}</div></div><button class="btn-x" onclick="removeModalExercise(${i})">×</button></div>`;
+    return `<div class="logged-ex"><div><div class="logged-ex-name">${ex.name}</div><div class="logged-ex-detail">${detail}</div></div><div class="history-ex-actions"><button class="mini-action" onclick="editModalExercise(${i})">Edit</button><button class="mini-action danger" onclick="removeModalExercise(${i})">Delete</button></div></div>`;
   }).join('');
 }
 function saveWorkout() {
@@ -1063,17 +1112,23 @@ function saveWorkout() {
   scheduleNotifications();
 }
 
-function openCardioModal() {
-  cardioType = 'Other';
-  document.querySelectorAll('.cardio-type-btn').forEach(b => b.classList.toggle('checked', b.textContent==='Other'));
-  document.getElementById('cardioDuration').value = 30;
-  document.getElementById('cardioDistance').value = 0;
-  document.getElementById('cardioDistanceUnit').value = '';
+function openCardioModal(idx = null) {
+  editingCardioIdx = idx;
+  const entry = idx === null ? null : state.cardio[idx];
+  cardioType = entry?.type || 'Other';
+  document.querySelectorAll('.cardio-type-btn').forEach(b => b.classList.toggle('checked', b.textContent===cardioType));
+  document.getElementById('cardioDuration').value = entry?.minutes || 30;
+  document.getElementById('cardioDistance').value = entry?.distance || 0;
+  document.getElementById('cardioDistanceUnit').value = entry?.distanceUnit || '';
   document.getElementById('cardioDate').max = todayStr();
-  setCardioDate(0);
+  if (entry) {
+    document.getElementById('cardioDate').value = entry.date;
+    syncCardioDateShortcuts();
+  } else setCardioDate(0);
+  document.querySelector('#cardioModal .btn.btn-primary').textContent = idx === null ? 'Save' : 'Update';
   document.getElementById('cardioModal').classList.remove('hidden');
 }
-function closeCardioModal() { document.getElementById('cardioModal').classList.add('hidden'); }
+function closeCardioModal() { editingCardioIdx = null; document.querySelector('#cardioModal .btn.btn-primary').textContent = 'Save'; document.getElementById('cardioModal').classList.add('hidden'); }
 function selectCardioType(t) {
   cardioType = t;
   document.querySelectorAll('.cardio-type-btn').forEach(b => b.classList.toggle('checked', b.textContent===t));
@@ -1082,7 +1137,9 @@ function saveCardio() {
   const mins = parseInt(document.getElementById('cardioDuration').value)||0;
   const distance = parseFloat(document.getElementById('cardioDistance').value)||0;
   if (mins<1) { alert('Enter a duration.'); return; }
-  state.cardio.push({ date:document.getElementById('cardioDate').value||todayStr(), minutes:mins, distance, distanceUnit:document.getElementById('cardioDistanceUnit').value.trim(), type:cardioType });
+  const payload = { date:document.getElementById('cardioDate').value||todayStr(), minutes:mins, distance, distanceUnit:document.getElementById('cardioDistanceUnit').value.trim(), type:cardioType };
+  if (editingCardioIdx === null) state.cardio.push(payload);
+  else state.cardio[editingCardioIdx] = payload;
   saveState(state);
   closeCardioModal();
   renderAll();
@@ -1101,37 +1158,75 @@ function deleteCardio(idx) {
   saveState(state);
   renderAll();
 }
+function editHistoryExercise(logIdx, exIdx) {
+  const log = state.logs[logIdx];
+  const ex = log?.exercises?.[exIdx];
+  if (!log || !ex) return;
+  openWorkoutModal();
+  modalChecked = [...log.muscles];
+  modalIntensity = log.intensity || 'moderate';
+  document.getElementById('workoutDate').value = log.date;
+  syncWorkoutDateShortcuts();
+  modalChecked.forEach(id => document.getElementById('mc_'+id)?.classList.add('checked'));
+  selectModalIntensity(modalIntensity);
+  exSectionOpen = true;
+  document.getElementById('exSection').classList.remove('hidden');
+  document.getElementById('exToggleBtn').textContent = '− Collapse';
+  modalExercises = log.exercises.map(item => JSON.parse(JSON.stringify(item)));
+  renderModalExercises();
+  editModalExercise(exIdx);
+  updateExerciseSuggestionsUI();
+}
+function deleteHistoryExercise(logIdx, exIdx) {
+  if (!confirm('Delete this exercise from the workout?')) return;
+  const log = state.logs[logIdx];
+  if (!log?.exercises) return;
+  log.exercises.splice(exIdx,1);
+  saveState(state);
+  renderAll();
+}
 function buildHistory() {
   const container = document.getElementById('historyList');
   const btn = document.getElementById('historyToggleBtn');
   const indexed = state.logs.map((l,i)=>({...l,_idx:i})).sort((a,b)=>b.date.localeCompare(a.date)||b._idx-a._idx);
+  const cardioIndexed = state.cardio.map((c,i)=>({...c,_idx:i})).sort((a,b)=>b.date.localeCompare(a.date)||b._idx-a._idx);
   const shown = historyExpanded ? indexed : indexed.slice(0,5);
   if (indexed.length > 5) {
     btn.style.display = '';
     btn.textContent = historyExpanded ? 'Show less' : `Show all (${indexed.length})`;
   } else btn.style.display = 'none';
-  if (!indexed.length) {
-    container.innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center;padding:20px 0;">No workouts logged yet.</div>';
-    return;
-  }
-  const intensityColor = i => i==='light'?'var(--blue)':i==='heavy'?'var(--red)':'var(--amber)';
-  container.innerHTML = shown.map(l => {
+  const workoutHtml = indexed.length ? shown.map(l => {
     const names = l.muscles.map(getMuscleName).join(', ');
-    const iColor = intensityColor(l.intensity||'moderate');
-    const exHtml = l.exercises && l.exercises.length ? `<div class="history-exercises">${l.exercises.map(ex => { const sets = ex.sets.map(s=>(s.weight?`${s.weight}${state.weightUnit}×`:'')+s.reps).join(' · '); return `<div class="history-ex-row"><span class="history-ex-name">${ex.name}</span> <span class="history-ex-sets">${sets}</span></div>`; }).join('')}</div>` : '';
+    const iColor = (l.intensity||'moderate')==='light'?'var(--blue)':(l.intensity||'moderate')==='heavy'?'var(--red)':'var(--amber)';
+    const exHtml = l.exercises && l.exercises.length ? `<div class="history-exercises">${l.exercises.map((ex, exIdx) => { const sets = ex.sets.map(s=>(s.weight?`${s.weight}${state.weightUnit}×`:'')+s.reps).join(' · '); return `<div class="history-ex-row"><div><span class="history-ex-name">${ex.name}</span> <span class="history-ex-sets">${sets}</span></div><div class="history-ex-actions"><button class="mini-action" onclick="editHistoryExercise(${l._idx},${exIdx})">Edit</button><button class="mini-action danger" onclick="deleteHistoryExercise(${l._idx},${exIdx})">Delete</button></div></div>`; }).join('')}</div>` : '';
     return `<div class="history-entry"><div class="history-header"><div><div class="history-date">${friendlyDate(l.date)}<span class="history-full-date">${l.date}</span></div><div class="history-meta">${names} · <span style="color:${iColor}">${l.intensity||'moderate'}</span></div></div><button class="btn-x" style="font-size:20px;color:rgba(255,255,255,0.2)" onclick="deleteLog(${l._idx})">×</button></div>${exHtml}</div>`;
-  }).join('');
+  }).join('') : '<div style="color:var(--muted);font-size:12px;text-align:center;padding:20px 0;">No workouts logged yet.</div>';
+  const cardioHtml = cardioIndexed.length ? `<div class="history-cardio-block">${cardioIndexed.slice(0, historyExpanded ? cardioIndexed.length : 5).map(c => `<div class="history-cardio-row"><div><div class="history-cardio-main">${c.type || 'Cardio'} · ${c.minutes} min</div><div class="history-cardio-sub">${friendlyDate(c.date)}${c.distance ? ` · ${formatDistance(c.distance, c.distanceUnit)}` : ''}</div></div><div class="history-ex-actions"><button class="mini-action" onclick="openCardioModal(${c._idx})">Edit</button><button class="mini-action danger" onclick="deleteCardio(${c._idx})">Delete</button></div></div>`).join('')}</div>` : '';
+  container.innerHTML = workoutHtml + cardioHtml;
 }
 
 function buildAnalytics() {
   document.getElementById('analyticsSub').textContent = `${state.logs.length} workouts · ${state.cardio.length} cardio sessions`;
+  const totalDistance = state.cardio.reduce((sum, c)=>sum + (Number(c.distance)||0), 0);
+  const totalMinutes = state.cardio.reduce((sum, c)=>sum + (Number(c.minutes)||0), 0);
+  const uniqueLifts = Object.values(state.exerciseSuggestions).flat().filter((v,i,a)=>a.indexOf(v)===i).length;
+  document.getElementById('analyticsHero').innerHTML = `<div class="analytics-hero-title">Your trend line</div><div class="analytics-hero-copy">See what is actually improving, not just what you did yesterday. Strength charts use your best set per session, and cardio tracks duration plus distance together.</div>`;
   const stats = [
-    { label:'workouts logged', value: state.logs.length },
-    { label:'unique lifts', value: Object.values(state.exerciseSuggestions).flat().filter((v,i,a)=>a.indexOf(v)===i).length },
-    { label:'cardio mins', value: state.cardio.reduce((sum, c)=>sum + (Number(c.minutes)||0), 0) },
-    { label:'cardio distance', value: state.cardio.reduce((sum, c)=>sum + (Number(c.distance)||0), 0).toFixed(1).replace(/\.0$/, '') }
+    { label:'workouts logged', value: state.logs.length, kicker:'all-time volume' },
+    { label:'unique lifts', value: uniqueLifts, kicker:'saved by muscle' },
+    { label:'cardio mins', value: totalMinutes, kicker:'all sessions' },
+    { label:'cardio distance', value: totalDistance.toFixed(1).replace(/\.0$/, ''), kicker:'all cardio tracked' }
   ];
-  document.getElementById('analyticsStats').innerHTML = stats.map(s => `<div class="analytics-stat"><div class="analytics-stat-value">${s.value || 0}</div><div class="analytics-stat-label">${s.label}</div></div>`).join('');
+  document.getElementById('analyticsStats').innerHTML = stats.map(s => `<div class="analytics-stat"><div class="analytics-stat-value">${s.value || 0}</div><div class="analytics-stat-label">${s.label}</div><div class="analytics-kicker">${s.kicker}</div></div>`).join('');
+  const bestStrengthSession = state.logs.reduce((best, log) => {
+    const volume = (log.exercises||[]).reduce((sum, ex) => sum + (ex.sets||[]).reduce((s, set) => s + ((Number(set.weight)||0) * (Number(set.reps)||0)), 0), 0);
+    return volume > best.volume ? { volume, date: log.date } : best;
+  }, { volume:0, date:null });
+  const bestCardio = state.cardio.reduce((best, entry) => {
+    const score = (Number(entry.distance)||0) * 10 + (Number(entry.minutes)||0);
+    return score > best.score ? { score, type: entry.type, date: entry.date } : best;
+  }, { score:0, type:null, date:null });
+  document.getElementById('analyticsSummaryRow').innerHTML = `<div class="analytics-summary-pill"><div class="analytics-summary-val">${bestStrengthSession.volume ? bestStrengthSession.volume.toFixed(0) : '—'}</div><div class="analytics-summary-label">best strength volume${bestStrengthSession.date ? ` · ${friendlyDate(bestStrengthSession.date)}` : ''}</div></div><div class="analytics-summary-pill"><div class="analytics-summary-val">${bestCardio.type || '—'}</div><div class="analytics-summary-label">top cardio session${bestCardio.date ? ` · ${friendlyDate(bestCardio.date)}` : ''}</div></div>`;
 
   const exerciseMap = new Map();
   state.logs.forEach(log => {
@@ -1265,6 +1360,8 @@ document.getElementById('cardioModal').addEventListener('click', e=>{ if(e.targe
 document.getElementById('settingsModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeSettings(); });
 document.getElementById('workoutDate').addEventListener('change', syncWorkoutDateShortcuts);
 document.getElementById('cardioDate').addEventListener('change', syncCardioDateShortcuts);
+document.getElementById('exName').addEventListener('input', updateExerciseDropdown);
+document.getElementById('exName').addEventListener('blur', ()=>setTimeout(()=>document.getElementById('exerciseDropdown').classList.add('hidden'), 120));
 
 renderAll();
 syncDown();
