@@ -662,6 +662,7 @@ let weekOffset = 0;
 let selectedDay = null;
 let exerciseAutocomplete = [];
 let editingExerciseRef = null;
+let editingWorkoutIdx = null;
 let editingCardioIdx = null;
 
 function todayStr() {
@@ -1019,7 +1020,8 @@ function syncCardioDateShortcuts() {
   ['cdToday','cdYest','cd2','cd3'].forEach((id,i) => document.getElementById(id).classList.toggle('active', val===dateOffset(i)));
 }
 
-function openWorkoutModal() {
+function openWorkoutModal(editIdx = null) {
+  editingWorkoutIdx = editIdx;
   modalChecked = [];
   modalExercises = [];
   exSectionOpen = false;
@@ -1036,11 +1038,12 @@ function openWorkoutModal() {
   document.getElementById('exSets').value = '3';
   document.getElementById('weightUnitLabel').textContent = state.weightUnit;
   document.getElementById('workoutDate').max = todayStr();
-  setWorkoutDate(0);
+  document.querySelector('#workoutModal .btn.btn-primary').textContent = editIdx === null ? 'Save' : 'Update';
+  if (editIdx === null) setWorkoutDate(0);
   updateExerciseSuggestionsUI();
   document.getElementById('workoutModal').classList.remove('hidden');
 }
-function closeWorkoutModal() { document.getElementById('workoutModal').classList.add('hidden'); }
+function closeWorkoutModal() { editingWorkoutIdx = null; editingExerciseRef = null; document.querySelector('#workoutModal .btn.btn-primary').textContent = 'Save'; document.getElementById('workoutModal').classList.add('hidden'); }
 function toggleMuscleCheck(id) {
   if (modalChecked.includes(id)) modalChecked = modalChecked.filter(x=>x!==id);
   else modalChecked.push(id);
@@ -1105,7 +1108,8 @@ function saveWorkout() {
   if (!modalChecked.length) { alert('Select at least one muscle group.'); return; }
   const entry = { date: document.getElementById('workoutDate').value || todayStr(), muscles:[...modalChecked], intensity:modalIntensity, exercises:modalExercises };
   rememberExercisesForEntry(entry);
-  state.logs.push(entry);
+  if (editingWorkoutIdx === null) state.logs.push(entry);
+  else state.logs[editingWorkoutIdx] = entry;
   saveState(state);
   closeWorkoutModal();
   renderAll();
@@ -1162,7 +1166,7 @@ function editHistoryExercise(logIdx, exIdx) {
   const log = state.logs[logIdx];
   const ex = log?.exercises?.[exIdx];
   if (!log || !ex) return;
-  openWorkoutModal();
+  openWorkoutModal(logIdx);
   modalChecked = [...log.muscles];
   modalIntensity = log.intensity || 'moderate';
   document.getElementById('workoutDate').value = log.date;
@@ -1173,9 +1177,9 @@ function editHistoryExercise(logIdx, exIdx) {
   document.getElementById('exSection').classList.remove('hidden');
   document.getElementById('exToggleBtn').textContent = '− Collapse';
   modalExercises = log.exercises.map(item => JSON.parse(JSON.stringify(item)));
+  updateExerciseSuggestionsUI();
   renderModalExercises();
   editModalExercise(exIdx);
-  updateExerciseSuggestionsUI();
 }
 function deleteHistoryExercise(logIdx, exIdx) {
   if (!confirm('Delete this exercise from the workout?')) return;
