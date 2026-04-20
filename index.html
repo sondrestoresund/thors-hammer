@@ -58,8 +58,9 @@ section { padding: 0 16px 20px; }
 .ring-wrap svg { transform: rotate(-90deg); }
 .ring-track { fill: none; stroke: var(--cardio-dim); stroke-width: 8; }
 .ring-progress { fill: none; stroke: var(--cardio); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1), stroke 0.4s ease; }
-@keyframes ringComplete { 0%,100% { filter: drop-shadow(0 0 4px #a259ff); } 50% { filter: drop-shadow(0 0 12px #a259ff) drop-shadow(0 0 24px #ff6fff); } }
-.ring-progress.complete { animation: ringComplete 1.4s ease-in-out infinite; }
+@keyframes ringFlow { 0% { stroke-dashoffset: 264; stroke: #a259ff; } 30% { stroke: #d946ef; } 60% { stroke: #818cf8; } 100% { stroke-dashoffset: 0; stroke: #a259ff; } }
+@keyframes ringFlowLoop { 0%,100% { stroke: #a259ff; } 33% { stroke: #d946ef; } 66% { stroke: #818cf8; } }
+.ring-progress.complete { animation: ringFlowLoop 2s linear infinite; }
 .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .ring-pct { font-family: var(--font-display); font-size: 22px; font-weight: 900; color: var(--cardio); line-height: 1; letter-spacing: -0.5px; transition: color 0.4s ease; }
 .ring-unit { font-size: 9px; color: var(--muted); letter-spacing: 1px; margin-top: 2px; }
