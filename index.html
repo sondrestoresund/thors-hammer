@@ -806,20 +806,20 @@ function buildSuggestion() {
   const declining = state.logs.length ? MUSCLES.filter(m => getMuscleStatus(m).status==='declining') : [];
   const ready = MUSCLES.filter(m => getMuscleStatus(m).status==='ready');
   const cardioMins = getWeekCardioMins();
-  let text = '', pills = [];
+  let text = 'Log your first workout to start tracking recovery and momentum.';
+  let pills = [];
   if (declining.length) {
     const top = declining.slice(0,3);
     const extra = declining.length>3 ? ` +${declining.length-3} more` : '';
     text = `${top.map(m=>m.name).join(', ')}${extra} ${top.length===1&&!extra?'needs':'need'} attention`;
     top.forEach(m => pills.push({label:m.name, type:'red'}));
-  } else if (ready.length) {
+  } else if (state.logs.length && ready.length) {
     const s = ready.slice(0,3);
     text = `${s.map(m=>m.name).join(', ')} ${s.length===1?'is':'are'} ready to train`;
     s.forEach(m => pills.push({label:m.name, type:'green'}));
-  } else {
-    text = 'All muscles resting, good recovery day.';
   }
   if (cardioMins < state.cardioGoal) pills.push({label:`${state.cardioGoal-cardioMins}min cardio`, type:'amber'});
+  if (!pills.length) pills.push({label:'Start strong', type:'green'});
   document.getElementById('suggestionText').textContent = text;
   document.getElementById('suggestionPills').innerHTML = pills.map(p=>`<span class="pill pill-${p.type}">${p.label}</span>`).join('');
 }
@@ -928,58 +928,45 @@ function updateStats() {
 
 function buildBodySvg() {
   const svg = document.getElementById('bodySvg');
-  svg.innerHTML = '';
-  const ns = 'http://www.w3.org/2000/svg';
-  const SKIN='#d4cdc6', SKIN_S='#c4bdb6', SKIN_L='#bfb8b0', LINE='rgba(0,0,0,0.12)', LINE_D='rgba(0,0,0,0.06)', LINE_B='rgba(0,0,0,0.25)';
-  function mk(tag, attrs) { const e = document.createElementNS(ns, tag); for (const [k,v] of Object.entries(attrs)) e.setAttribute(k,v); return e; }
-  function p(d, fill, stroke, sw, op) { return mk('path', {d, fill, stroke, 'stroke-width':sw||'0.5', 'fill-opacity':op||'1', 'stroke-linejoin':'round','stroke-linecap':'round'}); }
-  function muscleGroup(paths, m) {
-    const st = getMuscleStatus(m).status;
-    const col = statusColorSolid(st);
-    const isSel = selectedMuscle === m.id;
-    const g = mk('g', {});
-    g.style.cursor = 'pointer';
-    g.addEventListener('click', ()=>selectMuscle(m.id));
-    if (isSel) paths.forEach(({d})=>{ g.appendChild(mk('path',{d,fill:'none',stroke:col,'stroke-width':'4',opacity:'0.3','stroke-linejoin':'round','stroke-linecap':'round'})); });
-    paths.forEach(({d,op,line,lw})=>{
-      const stroke = line||(isSel?col:LINE_B);
-      const sw = lw||(isSel?'1.2':'0.4');
-      g.appendChild(mk('path',{d,fill:col,stroke,'stroke-width':sw,'fill-opacity':op||'0.9','stroke-linejoin':'round','stroke-linecap':'round'}));
-    });
-    return g;
-  }
-  const M = {}; MUSCLES.forEach(m=>M[m.id]=m);
-  if (currentView==='front') {
-    svg.appendChild(p('M80,6 C68,6 60,12 58,20 C56,28 57,37 61,43 C64,47 68,49 72,50 L72,55 L88,55 L88,50 C92,49 96,47 99,43 C103,37 104,28 102,20 C100,12 92,6 80,6 Z',SKIN,LINE,'0.6'));
-    svg.appendChild(p('M66,22 C66,18 72,15 80,15 C88,15 94,18 94,22 C94,30 90,38 80,40 C70,38 66,30 66,22 Z',SKIN_S,LINE_D,'0.4','0.5'));
-    svg.appendChild(p('M74,50 C72,52 71,56 71,60 L89,60 C89,56 88,52 86,50 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M71,55 C68,56 64,58 62,61 L80,62 L98,61 C96,58 92,56 89,55 Z',SKIN_S,LINE_D,'0.4','0.6'));
-    svg.appendChild(p('M60,60 C52,61 44,65 40,70 C36,75 35,82 36,92 C37,102 39,112 40,122 C41,132 41,140 41,148 L119,148 C119,140 119,132 120,122 C121,112 123,102 124,92 C125,82 124,75 120,70 C116,65 108,61 100,60 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M40,70 C34,72 27,78 23,86 C19,94 18,104 19,114 C20,120 22,126 25,130 C28,133 32,134 35,132 C38,130 40,126 41,120 C42,112 42,102 41,92 C40,82 40,74 40,70 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M120,70 C126,72 133,78 137,86 C141,94 142,104 141,114 C140,120 138,126 135,130 C132,133 128,134 125,132 C122,130 120,126 119,120 C118,112 118,102 119,92 C120,82 120,74 120,70 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M19,114 C17,122 16,130 16,138 C16,146 17,154 18,160 C19,164 21,167 24,168 C27,169 30,167 32,164 C34,160 35,154 35,146 C35,138 34,130 33,122 C32,116 30,112 28,111 C25,110 21,111 19,114 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M141,114 C143,122 144,130 144,138 C144,146 143,154 142,160 C141,164 139,167 136,168 C133,169 130,167 128,164 C126,160 125,154 125,146 C125,138 126,130 127,122 C128,116 130,112 132,111 C135,110 139,111 141,114 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M16,160 C15,166 15,172 16,176 C17,179 19,181 22,181 C25,181 28,179 30,176 C32,172 33,166 32,160 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M144,160 C145,166 145,172 144,176 C143,179 141,181 138,181 C135,181 132,179 130,176 C128,172 127,166 128,160 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M41,148 C39,152 38,158 38,162 L122,162 C122,158 121,152 119,148 Z',SKIN_L,LINE,'0.5'));
-    svg.appendChild(p('M38,162 C36,168 35,176 35,186 C35,198 36,210 38,220 C39,228 41,234 44,236 C47,238 51,236 54,232 C57,226 58,216 58,204 C58,192 57,180 55,170 C53,162 51,156 49,154 C46,152 42,155 38,162 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M122,162 C124,168 125,176 125,186 C125,198 124,210 122,220 C121,228 119,234 116,236 C113,238 109,236 106,232 C103,226 102,216 102,204 C102,192 103,180 105,170 C107,162 109,156 111,154 C114,152 118,155 122,162 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M36,236 C35,242 35,248 36,252 C37,256 39,258 42,258 C45,258 48,256 50,252 C52,248 52,242 51,236 Z',SKIN_S,LINE,'0.4'));
-    svg.appendChild(p('M124,236 C125,242 125,248 124,252 C123,256 121,258 118,258 C115,258 112,256 110,252 C108,248 108,242 109,236 Z',SKIN_S,LINE,'0.4'));
-    svg.appendChild(p('M36,252 C35,260 35,270 36,280 C37,288 39,296 41,302 C43,306 46,308 49,308 C52,308 55,305 57,301 C59,295 60,286 60,276 C60,266 59,256 57,250 C55,244 52,240 49,240 C46,240 42,244 39,250 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M124,252 C125,260 125,270 124,280 C123,288 121,296 119,302 C117,306 114,308 111,308 C108,308 105,305 103,301 C101,295 100,286 100,276 C100,266 101,256 103,250 C105,244 108,240 111,240 C114,240 118,244 121,250 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M36,302 C34,306 33,311 34,315 C35,318 38,320 42,320 C48,320 54,318 58,315 C61,313 62,310 61,307 C60,304 57,302 54,302 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M124,302 C126,306 127,311 126,315 C125,318 122,320 118,320 C112,320 106,318 102,315 C99,313 98,310 99,307 C100,304 103,302 106,302 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(muscleGroup([{d:'M40,70 C35,68 29,70 25,75 C21,80 20,88 22,96 C24,102 28,106 32,106 C35,106 38,103 40,98 C42,92 42,84 41,76 Z'},{d:'M40,70 C36,72 34,78 34,86 C34,94 36,100 40,103 C38,98 37,92 37,86 C37,80 38,74 40,70 Z',op:'0.7'},{d:'M120,70 C125,68 131,70 135,75 C139,80 140,88 138,96 C136,102 132,106 128,106 C125,106 122,103 120,98 C118,92 118,84 119,76 Z'},{d:'M120,70 C124,72 126,78 126,86 C126,94 124,100 120,103 C122,98 123,92 123,86 C123,80 122,74 120,70 Z',op:'0.7'}], M.shoulders));
-    svg.appendChild(muscleGroup([{d:'M62,60 C56,61 50,64 46,68 C42,72 40,78 41,86 C42,92 45,97 50,100 C54,102 59,102 63,100 C67,98 70,94 71,89 L71,62 C68,61 65,60 62,60 Z'},{d:'M98,60 C104,61 110,64 114,68 C118,72 120,78 119,86 C118,92 115,97 110,100 C106,102 101,102 97,100 C93,98 90,94 89,89 L89,62 C92,61 95,60 98,60 Z'},{d:'M78,60 C79,65 80,72 80,80 C80,88 79,96 78,102 L82,102 C81,96 80,88 80,80 C80,72 81,65 82,60 Z',op:'0.5'},{d:'M62,60 C58,60 54,62 51,64 C56,62 62,62 68,62 L68,60 Z',op:'0.6'},{d:'M98,60 C102,60 106,62 109,64 C104,62 98,62 92,62 L92,60 Z',op:'0.6'}], M.chest));
-    svg.appendChild(muscleGroup([{d:'M23,88 C20,96 20,106 22,114 C24,120 27,124 30,124 C33,124 36,120 37,114 C38,106 37,96 35,88 C33,82 30,78 28,78 C25,78 23,82 23,88 Z'},{d:'M24,114 C23,118 23,124 24,128 C25,131 27,132 30,132 C33,132 35,130 36,128 C37,124 37,118 36,114 C34,118 31,120 28,120 C26,118 24,116 24,114 Z',op:'0.75'},{d:'M137,88 C140,96 140,106 138,114 C136,120 133,124 130,124 C127,124 124,120 123,114 C122,106 123,96 125,88 C127,82 130,78 132,78 C135,78 137,82 137,88 Z'},{d:'M136,114 C137,118 137,124 136,128 C135,131 133,132 130,132 C127,132 125,130 124,128 C123,124 123,118 124,114 C126,118 129,120 132,120 C134,118 136,116 136,114 Z',op:'0.75'}], M.biceps));
-    svg.appendChild(muscleGroup([{d:'M20,82 C18,90 18,100 20,108 C21,114 23,118 25,118 C23,114 22,108 22,100 C22,92 22,86 24,80 C22,80 21,81 20,82 Z',op:'0.65'},{d:'M22,118 C21,122 21,126 22,128 C24,130 27,130 29,128 C31,124 31,120 30,118 Z',op:'0.7'},{d:'M140,82 C142,90 142,100 140,108 C139,114 137,118 135,118 C137,114 138,108 138,100 C138,92 138,86 136,80 C138,80 139,81 140,82 Z',op:'0.65'},{d:'M138,118 C139,122 139,126 138,128 C136,130 133,130 131,128 C129,124 129,120 130,118 Z',op:'0.7'}], M.triceps));
-    svg.appendChild(muscleGroup([{d:'M41,98 C39,108 39,118 40,128 C41,136 43,142 46,146 C48,148 51,148 53,146 C55,142 56,134 55,124 C54,114 52,104 49,98 C46,96 43,96 41,98 Z',op:'0.8'},{d:'M119,98 C121,108 121,118 120,128 C119,136 117,142 114,146 C112,148 109,148 107,146 C105,142 104,134 105,124 C106,114 108,104 111,98 C114,96 117,96 119,98 Z',op:'0.8'},{d:'M45,88 C43,92 44,96 47,98 C45,94 44,90 45,88 Z',op:'0.7'},{d:'M44,95 C42,99 43,103 46,105 C44,101 43,97 44,95 Z',op:'0.7'},{d:'M43,102 C41,106 42,110 45,112 C43,108 42,104 43,102 Z',op:'0.7'},{d:'M115,88 C117,92 116,96 113,98 C115,94 116,90 115,88 Z',op:'0.7'},{d:'M116,95 C118,99 117,103 114,105 C116,101 117,97 116,95 Z',op:'0.7'},{d:'M117,102 C119,106 118,110 115,112 C117,108 118,104 117,102 Z',op:'0.7'},{d:'M60,100 C58,100 56,102 56,106 C56,110 58,112 61,112 C64,112 66,110 66,106 C66,102 64,100 61,100 Z'},{d:'M99,100 C101,100 103,102 103,106 C103,110 101,112 98,112 C95,112 93,110 93,106 C93,102 95,100 98,100 Z'},{d:'M60,114 C58,114 56,116 56,120 C56,124 58,126 61,126 C64,126 66,124 66,120 C66,116 64,114 61,114 Z'},{d:'M99,114 C101,114 103,116 103,120 C103,124 101,126 98,126 C95,126 93,124 93,120 C93,116 95,114 98,114 Z'},{d:'M61,128 C59,128 57,130 57,134 C57,137 59,139 62,139 C65,139 67,137 67,134 C67,130 65,128 62,128 Z'},{d:'M99,128 C101,128 103,130 103,134 C103,137 101,139 98,139 C95,139 93,137 93,134 C93,130 95,128 98,128 Z'},{d:'M78,100 L82,100 L82,144 L78,144 Z',op:'0.3'}], M.core));
-    svg.appendChild(muscleGroup([{d:'M38,168 C36,178 35,190 36,202 C37,212 39,220 43,224 C40,218 38,208 38,196 C38,184 39,174 41,166 C40,166 39,167 38,168 Z',op:'0.85'},{d:'M46,162 C44,172 43,184 44,196 C45,206 47,214 51,218 C54,214 55,204 55,192 C55,180 53,168 51,160 C49,158 47,158 46,162 Z'},{d:'M52,196 C50,204 50,214 52,222 C54,228 57,232 60,232 C57,226 55,218 55,208 C55,200 55,194 56,190 C55,190 53,192 52,196 Z',op:'0.9'},{d:'M44,166 C42,178 42,192 44,204 C46,214 49,220 53,222 C50,216 48,206 48,194 C48,182 49,170 51,162 Z',op:'0.6'},{d:'M122,168 C124,178 125,190 124,202 C123,212 121,220 117,224 C120,218 122,208 122,196 C122,184 121,174 119,166 C120,166 121,167 122,168 Z',op:'0.85'},{d:'M114,162 C116,172 117,184 116,196 C115,206 113,214 109,218 C106,214 105,204 105,192 C105,180 107,168 109,160 C111,158 113,158 114,162 Z'},{d:'M108,196 C110,204 110,214 108,222 C106,228 103,232 100,232 C103,226 105,218 105,208 C105,200 105,194 104,190 C105,190 107,192 108,196 Z',op:'0.9'},{d:'M116,166 C118,178 118,192 116,204 C114,214 111,220 107,222 C110,216 112,206 112,194 C112,182 111,170 109,162 Z',op:'0.6'}], M.quads));
-    svg.appendChild(muscleGroup([{d:'M38,256 C37,264 37,274 38,284 C39,292 41,298 44,300 C42,294 41,285 41,275 C41,265 42,256 43,252 C41,252 39,253 38,256 Z',op:'0.85'},{d:'M44,252 C43,260 43,270 44,280 C45,290 47,298 50,302 C53,296 54,286 53,274 C52,262 50,254 48,250 C46,249 44,250 44,252 Z'},{d:'M51,240 C50,248 50,258 51,268 C52,276 54,282 57,284 C55,276 54,266 54,256 C54,246 55,238 57,234 C55,234 52,236 51,240 Z',op:'0.7'},{d:'M122,256 C123,264 123,274 122,284 C121,292 119,298 116,300 C118,294 119,285 119,275 C119,265 118,256 117,252 C119,252 121,253 122,256 Z',op:'0.85'},{d:'M116,252 C117,260 117,270 116,280 C115,290 113,298 110,302 C107,296 106,286 107,274 C108,262 110,254 112,250 C114,249 116,250 116,252 Z'},{d:'M109,240 C110,248 110,258 109,268 C108,276 106,282 103,284 C105,276 106,266 106,256 C106,246 105,238 103,234 C105,234 108,236 109,240 Z',op:'0.7'}], M.calves));
-  } else {
-    svg.innerHTML = svg.innerHTML; // placeholder to keep file manageable in this build
-  }
+  const front = currentView === 'front';
+  const frontMuscles = [
+    { id:'chest', x:56, y:68, w:48, h:26 },
+    { id:'shoulders', x:42, y:64, w:76, h:16 },
+    { id:'biceps', x:26, y:82, w:18, h:42 },
+    { id:'triceps', x:116, y:82, w:18, h:42 },
+    { id:'core', x:62, y:102, w:36, h:52 },
+    { id:'quads', x:56, y:168, w:48, h:62 },
+    { id:'calves', x:60, y:236, w:40, h:54 },
+  ];
+  const backMuscles = [
+    { id:'back', x:50, y:68, w:60, h:54 },
+    { id:'shoulders', x:42, y:64, w:76, h:16 },
+    { id:'triceps', x:26, y:82, w:18, h:42 },
+    { id:'glutes', x:58, y:136, w:44, h:28 },
+    { id:'hamstrings', x:56, y:170, w:48, h:58 },
+    { id:'calves', x:60, y:236, w:40, h:54 },
+  ];
+  const muscles = front ? frontMuscles : backMuscles;
+  svg.innerHTML = `
+    <rect x="66" y="18" width="28" height="32" rx="12" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" />
+    <rect x="56" y="48" width="48" height="18" rx="8" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" />
+    <rect x="42" y="64" width="76" height="96" rx="18" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" />
+    <rect x="22" y="74" width="20" height="104" rx="10" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" />
+    <rect x="118" y="74" width="20" height="104" rx="10" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" />
+    <rect x="50" y="160" width="60" height="82" rx="16" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" />
+    <rect x="56" y="238" width="20" height="72" rx="10" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" />
+    <rect x="84" y="238" width="20" height="72" rx="10" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" />
+  `;
+  muscles.forEach(m => {
+    const st = getMuscleStatus(MUSCLES.find(x=>x.id===m.id)).status;
+    const fill = statusColorSolid(st);
+    const outline = selectedMuscle === m.id ? '#ffffff' : 'rgba(0,0,0,0.18)';
+    svg.innerHTML += `<rect x="${m.x}" y="${m.y}" width="${m.w}" height="${m.h}" rx="10" fill="${fill}" fill-opacity="0.88" stroke="${outline}" stroke-width="${selectedMuscle===m.id?2:0.8}" data-muscle="${m.id}" />`;
+  });
+  svg.querySelectorAll('[data-muscle]').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => selectMuscle(el.getAttribute('data-muscle')));
+  });
 }
 
 function buildMuscleList() {
