@@ -33,6 +33,7 @@
   --blue-dim: rgba(96,165,250,0.15);
   --cardio: #cc2200;
   --cardio-dim: rgba(204,34,0,0.15);
+  --purple: #a259ff;
   --font-display: 'Barlow Condensed', sans-serif;
   --font-body: 'Barlow', sans-serif;
   --r: 4px;
@@ -40,12 +41,13 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-body); overflow-x: hidden; }
+body.analytics-mode { background: #111111; }
 
 .app { max-width: 480px; margin: 0 auto; min-height: 100vh; padding: 0 0 calc(80px + env(safe-area-inset-bottom)); }
 .topbar { padding: max(52px, calc(env(safe-area-inset-top) + 20px)) 16px 16px; display: flex; justify-content: space-between; align-items: flex-end; }
 .topbar-title { font-family: var(--font-display); font-size: 42px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; color: #111111; }
 .topbar-date { font-size: 11px; color: rgba(17,17,17,0.45); text-transform: uppercase; letter-spacing: 2px; font-weight: 500; }
-.topbar-actions { display: flex; gap: 6px; align-items: center; }
+.topbar-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 section { padding: 0 16px 20px; }
 
 .card { background: #111111; border-radius: var(--r); padding: 16px; }
@@ -58,7 +60,6 @@ section { padding: 0 16px 20px; }
 .ring-wrap svg { transform: rotate(-90deg); }
 .ring-track { fill: none; stroke: var(--cardio-dim); stroke-width: 8; }
 .ring-progress { fill: none; stroke: var(--cardio); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1), stroke 0.4s ease; }
-@keyframes ringFlow { 0% { stroke-dashoffset: 264; stroke: #a259ff; } 30% { stroke: #d946ef; } 60% { stroke: #818cf8; } 100% { stroke-dashoffset: 0; stroke: #a259ff; } }
 @keyframes ringFlowLoop { 0%,100% { stroke: #a259ff; } 33% { stroke: #d946ef; } 66% { stroke: #818cf8; } }
 .ring-progress.complete { animation: ringFlowLoop 2s linear infinite; }
 .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -137,17 +138,23 @@ section { padding: 0 16px 20px; }
 .muscle-check:active { transform: scale(0.97); }
 .muscle-check.checked { background: #ffffff; border-color: #ffffff; color: #111111; }
 
-.date-input { background: #1e1e1e; border: 1px solid rgba(255,255,255,0.12); border-radius: var(--r-sm); color: #ffffff; font-family: var(--font-body); font-size: 14px; padding: 10px 12px; width: 100%; appearance: none; -webkit-appearance: none; cursor: pointer; }
-.date-input:focus { outline: none; border-color: rgba(255,255,255,0.4); }
+.date-input, .text-input, .select-input { background: #1e1e1e; border: 1px solid rgba(255,255,255,0.12); border-radius: var(--r-sm); color: #ffffff; font-family: var(--font-body); font-size: 14px; padding: 10px 12px; width: 100%; appearance: none; -webkit-appearance: none; }
+.date-input:focus, .text-input:focus, .select-input:focus { outline: none; border-color: rgba(255,255,255,0.4); }
 .date-input::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.5; }
 .date-shortcut-row { display: flex; gap: 5px; margin-top: 6px; }
 .date-shortcut { flex: 1; padding: 7px 4px; border-radius: var(--r-sm); border: 1px solid rgba(255,255,255,0.12); background: transparent; color: rgba(255,255,255,0.45); font-family: var(--font-display); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; text-align: center; transition: all 0.12s; }
 .date-shortcut.active { background: #ffffff; color: #111111; border-color: #ffffff; }
 
-.duration-input-wrap { display: flex; align-items: center; gap: 10px; }
+.duration-input-wrap, .metric-row { display: flex; align-items: center; gap: 10px; }
 .duration-input { background: #1e1e1e; border: 1.5px solid rgba(255,255,255,0.15); border-radius: var(--r-sm); color: #ffffff; font-family: var(--font-display); font-size: 28px; font-weight: 900; text-align: center; width: 110px; padding: 12px; }
 .duration-input:focus { outline: none; border-color: var(--cardio); }
 .duration-label { color: rgba(255,255,255,0.45); font-size: 13px; }
+.metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.metric-card { background: #1e1e1e; border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-sm); padding: 12px; }
+.metric-card .modal-section-label { margin-bottom: 6px; }
+.metric-input { width: 100%; background: #111111; border: 1px solid rgba(255,255,255,0.12); border-radius: var(--r-sm); color: #fff; font-family: var(--font-display); font-size: 22px; font-weight: 800; text-align: center; padding: 10px; }
+.metric-input:focus { outline: none; border-color: var(--cardio); }
+.metric-unit { color: var(--muted); font-size: 11px; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
 .cardio-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .cardio-type-btn { padding: 11px 6px; border-radius: var(--r-sm); border: 1px solid rgba(255,255,255,0.12); text-align: center; font-size: 11px; cursor: pointer; transition: all 0.12s; background: #1e1e1e; color: rgba(255,255,255,0.45); font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 .cardio-type-btn.checked { background: var(--cardio); border-color: var(--cardio); color: #ffffff; }
@@ -180,7 +187,6 @@ section { padding: 0 16px 20px; }
 .notif-text { flex: 1; color: rgba(255,255,255,0.85); line-height: 1.4; font-weight: 500; }
 .notif-close { background: none; border: none; color: rgba(255,255,255,0.45); cursor: pointer; font-size: 16px; padding: 0; font-weight: 700; }
 
-/* EXERCISES */
 .ex-section { margin-top: 8px; }
 .ex-name-input { width: 100%; background: #1e1e1e; border: 1px solid rgba(255,255,255,0.12); border-radius: var(--r-sm); color: #ffffff; font-family: var(--font-body); font-size: 14px; padding: 10px 12px; margin-bottom: 8px; }
 .ex-name-input:focus { outline: none; border-color: rgba(255,255,255,0.4); }
@@ -196,8 +202,11 @@ section { padding: 0 16px 20px; }
 .logged-ex-detail { font-size: 10px; color: var(--muted); margin-top: 2px; }
 .btn-x { background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; font-size: 18px; line-height: 1; padding: 2px 4px; }
 .btn-x:active { color: var(--red); }
+.exercise-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.exercise-chip { border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); border-radius: 999px; padding: 7px 10px; font-family: var(--font-display); font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; cursor: pointer; }
+.exercise-chip:hover { background: rgba(255,255,255,0.1); }
+.exercise-helper { font-size: 10px; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
 
-/* HISTORY */
 .history-entry { background: #111111; border-radius: var(--r); padding: 14px 14px 12px; margin-bottom: 8px; }
 .history-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
 .history-date { font-family: var(--font-display); font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; }
@@ -208,14 +217,12 @@ section { padding: 0 16px 20px; }
 .history-ex-name { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; color: rgba(255,255,255,0.85); }
 .history-ex-sets { color: var(--muted); font-size: 10px; }
 
-/* MUSCLE EXERCISE HISTORY */
 .ex-history { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); }
 .ex-history-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 8px; font-weight: 600; }
 .ex-history-entry { margin-bottom: 8px; }
 .ex-history-date { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; font-family: var(--font-display); font-weight: 600; }
 .ex-history-row { font-size: 11px; margin-bottom: 2px; }
 
-/* SETTINGS */
 .settings-field-row { display: flex; align-items: center; gap: 12px; }
 .settings-num { width: 80px; background: #1e1e1e; border: 1.5px solid rgba(255,255,255,0.15); border-radius: var(--r-sm); color: #ffffff; font-family: var(--font-display); font-size: 24px; font-weight: 900; text-align: center; padding: 10px; }
 .settings-num:focus { outline: none; border-color: rgba(255,255,255,0.5); }
@@ -227,13 +234,41 @@ section { padding: 0 16px 20px; }
 .data-actions .btn { flex: 1; }
 .settings-note { font-size: 10px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
 
+.analytics-shell { display: none; min-height: 100vh; max-width: 480px; margin: 0 auto; padding: max(52px, calc(env(safe-area-inset-top) + 20px)) 16px calc(32px + env(safe-area-inset-bottom)); background: #111111; }
+.analytics-shell.active { display: block; }
+.analytics-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
+.analytics-title { font-family: var(--font-display); font-size: 40px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; color: #fff; }
+.analytics-sub { color: rgba(255,255,255,0.45); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; }
+.analytics-section { margin-bottom: 18px; }
+.analytics-card { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r); padding: 14px; margin-bottom: 10px; }
+.analytics-card h3 { font-family: var(--font-display); font-size: 16px; font-weight: 800; letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 8px; }
+.analytics-card p { color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.5; }
+.analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.analytics-stat { background: #111111; border-radius: var(--r-sm); padding: 12px; border: 1px solid rgba(255,255,255,0.08); }
+.analytics-stat-value { font-family: var(--font-display); font-size: 30px; font-weight: 900; letter-spacing: -0.8px; }
+.analytics-stat-label { font-size: 9px; color: rgba(255,255,255,0.45); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+.exercise-analytics-row, .cardio-analytics-row { background: #111111; border-radius: var(--r-sm); border: 1px solid rgba(255,255,255,0.08); padding: 12px; margin-bottom: 8px; }
+.exercise-analytics-title, .cardio-analytics-title { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; margin-bottom: 8px; }
+.exercise-analytics-name, .cardio-analytics-name { font-family: var(--font-display); font-size: 15px; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase; }
+.exercise-analytics-muscle, .cardio-analytics-meta { font-size: 10px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1.2px; }
+.trend-line { display: flex; align-items: flex-end; gap: 4px; height: 80px; margin-top: 8px; }
+.trend-bar { flex: 1; min-width: 0; background: linear-gradient(to top, rgba(74,222,128,0.9), rgba(74,222,128,0.35)); border-radius: 2px 2px 0 0; position: relative; }
+.trend-bar.cardio { background: linear-gradient(to top, rgba(204,34,0,0.9), rgba(204,34,0,0.35)); }
+.trend-bar-label { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); font-size: 8px; color: rgba(255,255,255,0.35); text-transform: uppercase; }
+.trend-bar-value { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-size: 8px; color: rgba(255,255,255,0.65); font-family: var(--font-display); }
+.analytics-empty { color: rgba(255,255,255,0.35); font-size: 12px; text-align: center; padding: 24px 10px; }
 .hidden { display: none !important; }
 .section-header { display: flex; justify-content: space-between; align-items: center; padding: 0 0 10px; }
 .section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: rgba(17,17,17,0.45); font-weight: 600; }
+@media (max-width: 390px) {
+  .cardio-card { flex-direction: column; align-items: flex-start; }
+  .metric-grid { grid-template-columns: 1fr; }
+  .analytics-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
-<div class="app">
+<div class="app" id="mainApp">
   <div class="topbar">
     <div>
       <div class="topbar-title">FORM</div>
@@ -241,6 +276,7 @@ section { padding: 0 16px 20px; }
       <div id="syncStatus" style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;margin-top:3px;color:rgba(17,17,17,0.3)"></div>
     </div>
     <div class="topbar-actions">
+      <button class="btn btn-light" onclick="showView('analytics')">Analytics</button>
       <button class="btn btn-light" onclick="openSettings()">Settings</button>
       <button class="btn" onclick="openWorkoutModal()" style="background:#4ade80;color:#111111;border-color:#4ade80;">+ Log</button>
     </div>
@@ -326,7 +362,33 @@ section { padding: 0 16px 20px; }
   </section>
 </div>
 
-<!-- WORKOUT MODAL -->
+<div class="analytics-shell" id="analyticsPage">
+  <div class="analytics-header">
+    <div>
+      <div class="analytics-title">Analytics</div>
+      <div class="analytics-sub" id="analyticsSub">Strength and cardio trends</div>
+    </div>
+    <button class="btn" onclick="showView('main')">Back</button>
+  </div>
+  <div class="analytics-section">
+    <div class="analytics-grid" id="analyticsStats"></div>
+  </div>
+  <div class="analytics-section">
+    <div class="analytics-card">
+      <h3>Strength progress</h3>
+      <p>Top set movement trends across weight and reps, based on your logged exercises.</p>
+    </div>
+    <div id="strengthAnalyticsList"></div>
+  </div>
+  <div class="analytics-section">
+    <div class="analytics-card">
+      <h3>Cardio progress</h3>
+      <p>Recent distance and duration trends for each cardio type.</p>
+    </div>
+    <div id="cardioAnalyticsList"></div>
+  </div>
+</div>
+
 <div class="modal-overlay hidden" id="workoutModal">
   <div class="modal">
     <div class="modal-title">Log workout</div>
@@ -348,7 +410,10 @@ section { padding: 0 16px 20px; }
         <button class="btn" id="exToggleBtn" style="padding:4px 10px;font-size:10px;letter-spacing:1px;" onclick="toggleExSection()">+ Add</button>
       </div>
       <div id="exSection" class="hidden ex-section">
-        <input class="ex-name-input" type="text" id="exName" placeholder="Exercise name (e.g. Bench press)"/>
+        <div class="exercise-helper" id="exerciseHelperText">Select one or more muscles to unlock saved exercise suggestions.</div>
+        <div class="exercise-suggestions" id="exerciseSuggestionChips"></div>
+        <input class="ex-name-input" list="exerciseSuggestions" type="text" id="exName" placeholder="Exercise name (e.g. Bench press)"/>
+        <datalist id="exerciseSuggestions"></datalist>
         <div class="ex-fields-row">
           <div class="ex-field">
             <div class="ex-field-label" id="weightUnitLabel">kg</div>
@@ -385,15 +450,21 @@ section { padding: 0 16px 20px; }
   </div>
 </div>
 
-<!-- CARDIO MODAL -->
 <div class="modal-overlay hidden" id="cardioModal">
   <div class="modal">
     <div class="modal-title">Log cardio</div>
     <div class="modal-section">
-      <span class="modal-section-label">Duration</span>
-      <div class="duration-input-wrap">
-        <input class="duration-input" type="number" id="cardioDuration" value="30" min="1" max="300"/>
-        <span class="duration-label">minutes</span>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <span class="modal-section-label">Duration</span>
+          <input class="metric-input" type="number" id="cardioDuration" value="30" min="1" max="300"/>
+          <div class="metric-unit">minutes</div>
+        </div>
+        <div class="metric-card">
+          <span class="modal-section-label">Distance</span>
+          <input class="metric-input" type="number" id="cardioDistance" value="0" min="0" step="0.1"/>
+          <div class="metric-unit">miles / km / machine units</div>
+        </div>
       </div>
     </div>
     <div class="modal-section">
@@ -409,6 +480,10 @@ section { padding: 0 16px 20px; }
         <div class="cardio-type-btn" onclick="selectCardioType('Jump rope')">Jump rope</div>
         <div class="cardio-type-btn checked" onclick="selectCardioType('Other')">Other</div>
       </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-section-label">Notes (optional unit)</span>
+      <input class="text-input" id="cardioDistanceUnit" placeholder="e.g. miles, km, floors, meters" />
     </div>
     <div class="modal-section">
       <span class="modal-section-label">Date</span>
@@ -427,7 +502,6 @@ section { padding: 0 16px 20px; }
   </div>
 </div>
 
-<!-- SETTINGS MODAL -->
 <div class="modal-overlay hidden" id="settingsModal">
   <div class="modal">
     <div class="modal-title">Settings</div>
@@ -463,7 +537,6 @@ section { padding: 0 16px 20px; }
 </div>
 
 <script>
-// ── SUPABASE ──────────────────────────────────────────────────────────────
 const SUPA_URL = 'https://fwjmeuaxvrxgvjkqnltk.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3am1ldWF4dnJ4Z3Zqa3FubHRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDY2NjksImV4cCI6MjA5MjAyMjY2OX0._DA8CafKrYsYQ-Lg1KeYPTaE8L4OHi-oF0XoeSgZl8M';
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
@@ -473,7 +546,7 @@ function setSyncStatus(s) {
   if (!el) return;
   if (s === 'syncing') el.textContent = '↑ syncing';
   else if (s === 'synced') { el.textContent = '✓ synced'; setTimeout(()=>{ if(el.textContent==='✓ synced') el.textContent=''; }, 3000); }
-  else if (s === 'error')  el.textContent = '⚠ offline';
+  else if (s === 'error') el.textContent = '⚠ offline';
   else el.textContent = '';
 }
 
@@ -483,30 +556,29 @@ async function syncUp(s) {
     const { error } = await sb.from('form_state').upsert({ id:1, data:s, updated_at:new Date().toISOString() });
     if (error) throw error;
     setSyncStatus('synced');
-  } catch { setSyncStatus('error'); }
+  } catch {
+    setSyncStatus('error');
+  }
 }
 
 async function syncDown() {
   try {
     const { data, error } = await sb.from('form_state').select('data').eq('id',1).single();
     if (error || !data?.data) return;
-    const remote = data.data;
+    const remote = hydrateState(data.data);
     if (!Array.isArray(remote.logs)) return;
     const local = loadState();
     if (!local._savedAt || !remote._savedAt || remote._savedAt > local._savedAt) {
       state = remote;
-      if (!state.cardioGoal) state.cardioGoal = 60;
-      if (!state.weightUnit) state.weightUnit = 'kg';
-      if (!state.logs) state.logs = [];
-      if (!state.cardio) state.cardio = [];
       localStorage.setItem('form_state', JSON.stringify(state));
       renderAll();
       setSyncStatus('synced');
     }
-  } catch { setSyncStatus('error'); }
+  } catch {
+    setSyncStatus('error');
+  }
 }
 
-// ── DATA ─────────────────────────────────────────────────────────────────
 const MUSCLES = [
   { id:'chest',      name:'Chest',      restDays:2, declineDays:7, view:'front' },
   { id:'shoulders',  name:'Shoulders',  restDays:2, declineDays:7, view:'front' },
@@ -515,13 +587,33 @@ const MUSCLES = [
   { id:'core',       name:'Core',       restDays:1, declineDays:2, view:'front' },
   { id:'quads',      name:'Quads',      restDays:2, declineDays:7, view:'front' },
   { id:'calves',     name:'Calves',     restDays:1, declineDays:5, view:'front' },
-  { id:'back',       name:'Back',       restDays:2, declineDays:7, view:'back'  },
-  { id:'glutes',     name:'Glutes',     restDays:2, declineDays:7, view:'back'  },
-  { id:'hamstrings', name:'Hamstrings', restDays:2, declineDays:7, view:'back'  },
+  { id:'back',       name:'Back',       restDays:2, declineDays:7, view:'back' },
+  { id:'glutes',     name:'Glutes',     restDays:2, declineDays:7, view:'back' },
+  { id:'hamstrings', name:'Hamstrings', restDays:2, declineDays:7, view:'back' },
 ];
 const INTENSITY_EXTRA = { light:-1, moderate:0, heavy:1 };
 
-function loadState() { try { return JSON.parse(localStorage.getItem('form_state')) || {}; } catch { return {}; } }
+function hydrateState(raw) {
+  const s = raw || {};
+  if (!Array.isArray(s.logs)) s.logs = [];
+  if (!Array.isArray(s.cardio)) s.cardio = [];
+  if (!s.notifAsked) s.notifAsked = false;
+  if (!s.cardioGoal) s.cardioGoal = 60;
+  if (!s.weightUnit) s.weightUnit = 'kg';
+  if (!s.exerciseSuggestions || typeof s.exerciseSuggestions !== 'object') s.exerciseSuggestions = {};
+  Object.keys(s.exerciseSuggestions).forEach(k => {
+    const vals = Array.isArray(s.exerciseSuggestions[k]) ? s.exerciseSuggestions[k] : [];
+    s.exerciseSuggestions[k] = [...new Set(vals.filter(Boolean).map(v => v.trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  });
+  s.logs = s.logs.map(log => ({ ...log, exercises: Array.isArray(log.exercises) ? log.exercises : [] }));
+  s.cardio = s.cardio.map(c => ({ ...c, minutes: Number(c.minutes)||0, distance: Number(c.distance)||0, distanceUnit: c.distanceUnit || '' }));
+  return s;
+}
+
+function loadState() {
+  try { return hydrateState(JSON.parse(localStorage.getItem('form_state')) || {}); }
+  catch { return hydrateState({}); }
+}
 function saveState(s) {
   s._savedAt = new Date().toISOString();
   localStorage.setItem('form_state', JSON.stringify(s));
@@ -529,14 +621,9 @@ function saveState(s) {
 }
 
 let state = loadState();
-if (!state.logs)        state.logs = [];
-if (!state.cardio)      state.cardio = [];
-if (!state.notifAsked)  state.notifAsked = false;
-if (!state.cardioGoal)  state.cardioGoal = 60;
-if (!state.weightUnit)  state.weightUnit = 'kg';
-
 let selectedMuscle = null;
 let currentView = 'front';
+let activeScreen = 'main';
 let modalChecked = [];
 let modalIntensity = 'moderate';
 let cardioType = 'Other';
@@ -546,7 +633,6 @@ let historyExpanded = false;
 let weekOffset = 0;
 let selectedDay = null;
 
-// ── DATE HELPERS ─────────────────────────────────────────────────────────
 function todayStr() {
   const d = new Date();
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
@@ -565,11 +651,30 @@ function friendlyDate(dateStr) {
   const da = daysAgo(dateStr);
   if (da === 0) return 'Today';
   if (da === 1) return 'Yesterday';
-  if (da < 7)  return `${da}d ago`;
+  if (da < 7) return `${da}d ago`;
   return dateStr;
 }
+function fmtShort(d) { return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function slugifyExercise(name) {
+  return (name || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+function formatDistance(distance, unit) {
+  if (!distance) return '—';
+  const rounded = Number.isInteger(distance) ? distance : Number(distance).toFixed(1).replace(/\.0$/, '');
+  return `${rounded} ${unit || 'units'}`;
+}
+function getMuscleName(id) {
+  return MUSCLES.find(m => m.id === id)?.name || id;
+}
 
-// ── STATUS ───────────────────────────────────────────────────────────────
+function showView(view) {
+  activeScreen = view;
+  document.getElementById('mainApp').classList.toggle('hidden', view !== 'main');
+  document.getElementById('analyticsPage').classList.toggle('active', view === 'analytics');
+  document.body.classList.toggle('analytics-mode', view === 'analytics');
+  if (view === 'analytics') buildAnalytics();
+}
+
 function getMuscleStatus(m) {
   const logs = state.logs.filter(l => l.muscles.includes(m.id)).sort((a,b) => b.date.localeCompare(a.date));
   if (!logs.length) return { status:'ready', daysAgo:null, restNeeded:0 };
@@ -580,10 +685,9 @@ function getMuscleStatus(m) {
   if (da >= m.declineDays) return { status:'declining', daysAgo:da, restNeeded:0 };
   return { status:'ready', daysAgo:da, restNeeded:0 };
 }
-function statusColor(s)      { return s==='ready'?'var(--green)':s==='resting'?'var(--amber)':'var(--red)'; }
+function statusColor(s) { return s==='ready'?'var(--green)':s==='resting'?'var(--amber)':'var(--red)'; }
 function statusColorSolid(s) { return s==='ready'?'#1a7a3c':s==='resting'?'#d97706':'#cc2200'; }
 
-// ── WEEK / STREAK ─────────────────────────────────────────────────────────
 function getWeekStart() {
   const d = new Date(); d.setHours(0,0,0,0);
   d.setDate(d.getDate() - ((d.getDay()+6)%7));
@@ -595,17 +699,25 @@ function weekStartStr() {
 }
 function getWeekCardioMins() {
   const ws = weekStartStr();
-  return state.cardio.filter(c => c.date >= ws).reduce((s,c) => s+c.minutes, 0);
+  return state.cardio.filter(c => c.date >= ws).reduce((s,c) => s + (Number(c.minutes)||0), 0);
+}
+function getWeekCardioDistance() {
+  const ws = weekStartStr();
+  return state.cardio.filter(c => c.date >= ws).reduce((s,c) => s + (Number(c.distance)||0), 0);
 }
 function getStreak() {
   const dates = [...new Set(state.logs.map(l=>l.date))].sort((a,b)=>b.localeCompare(a));
   if (!dates.length) return 0;
   const t = todayStr(), y = dateOffset(1);
   if (dates[0] !== t && dates[0] !== y) return 0;
-  let streak = 0, check = dates[0];
+  let streak = 0;
+  let current = new Date(dates[0] + 'T00:00:00');
   for (const d of dates) {
-    if (d === check) { streak++; check = dateOffset(daysAgo(check)+1); }
-    else break;
+    const expected = current.getFullYear()+'-'+String(current.getMonth()+1).padStart(2,'0')+'-'+String(current.getDate()).padStart(2,'0');
+    if (d === expected) {
+      streak++;
+      current.setDate(current.getDate()-1);
+    } else break;
   }
   return streak;
 }
@@ -614,13 +726,11 @@ function getDaysSinceLast() {
   return sorted.length ? daysAgo(sorted[0]) : null;
 }
 
-// ── SUGGESTION ────────────────────────────────────────────────────────────
 function buildSuggestion() {
   const declining = state.logs.length ? MUSCLES.filter(m => getMuscleStatus(m).status==='declining') : [];
-  const ready     = MUSCLES.filter(m => getMuscleStatus(m).status==='ready');
+  const ready = MUSCLES.filter(m => getMuscleStatus(m).status==='ready');
   const cardioMins = getWeekCardioMins();
-  let text='', pills=[];
-
+  let text = '', pills = [];
   if (declining.length) {
     const top = declining.slice(0,3);
     const extra = declining.length>3 ? ` +${declining.length-3} more` : '';
@@ -631,22 +741,18 @@ function buildSuggestion() {
     text = `${s.map(m=>m.name).join(', ')} ${s.length===1?'is':'are'} ready to train`;
     s.forEach(m => pills.push({label:m.name, type:'green'}));
   } else {
-    text = 'All muscles resting — good recovery day.';
+    text = 'All muscles resting, good recovery day.';
   }
   if (cardioMins < state.cardioGoal) pills.push({label:`${state.cardioGoal-cardioMins}min cardio`, type:'amber'});
-
   document.getElementById('suggestionText').textContent = text;
   document.getElementById('suggestionPills').innerHTML = pills.map(p=>`<span class="pill pill-${p.type}">${p.label}</span>`).join('');
 }
 
-// ── WEEK BAR ──────────────────────────────────────────────────────────────
 function getOffsetWeekStart(offset) {
   const d = new Date(); d.setHours(0,0,0,0);
   d.setDate(d.getDate() - ((d.getDay()+6)%7) - offset*7);
   return d;
 }
-function fmtShort(d) { return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
-
 function changeWeek(dir) {
   weekOffset = Math.max(0, weekOffset + dir);
   selectedDay = null;
@@ -656,23 +762,17 @@ function selectDay(ds) {
   selectedDay = selectedDay===ds ? null : ds;
   buildWeekBar();
 }
-
 function buildDayDetail(dateStr) {
   const da = daysAgo(dateStr);
-  const heading = da===0?'Today':da===1?'Yesterday'
-    :new Date(dateStr+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  const heading = da===0?'Today':da===1?'Yesterday':new Date(dateStr+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
   const workouts = state.logs.filter(l=>l.date===dateStr);
-  const cardios  = state.cardio.filter(c=>c.date===dateStr);
-  if (!workouts.length && !cardios.length) {
-    return `<div class="day-detail"><div class="day-detail-heading">${heading}</div><div class="day-detail-empty">Rest day — nothing logged</div></div>`;
-  }
+  const cardios = state.cardio.filter(c=>c.date===dateStr);
+  if (!workouts.length && !cardios.length) return `<div class="day-detail"><div class="day-detail-heading">${heading}</div><div class="day-detail-empty">Rest day, nothing logged</div></div>`;
   let html = `<div class="day-detail"><div class="day-detail-heading">${heading}</div>`;
   workouts.forEach(w => {
-    const muscles = w.muscles.map(id=>MUSCLES.find(m=>m.id===id)?.name||id).join(', ');
+    const muscles = w.muscles.map(getMuscleName).join(', ');
     const iCol = w.intensity==='light'?'var(--blue)':w.intensity==='heavy'?'var(--red)':'var(--amber)';
-    html += `<div class="day-detail-entry">
-      <div class="day-detail-type">Workout</div>
-      <div class="day-detail-title">${muscles} <span style="color:${iCol};font-size:11px;font-weight:600;text-transform:none;letter-spacing:0">· ${w.intensity||'moderate'}</span></div>`;
+    html += `<div class="day-detail-entry"><div class="day-detail-type">Workout</div><div class="day-detail-title">${muscles} <span style="color:${iCol};font-size:11px;font-weight:600;text-transform:none;letter-spacing:0">· ${w.intensity||'moderate'}</span></div>`;
     (w.exercises||[]).forEach(ex => {
       const sets = ex.sets.map(s=>(s.weight?`${s.weight}${state.weightUnit}×`:'')+s.reps).join(' · ');
       html += `<div class="day-detail-ex">${ex.name} — ${sets}</div>`;
@@ -680,37 +780,30 @@ function buildDayDetail(dateStr) {
     html += `</div>`;
   });
   cardios.forEach(c => {
-    html += `<div class="day-detail-entry">
-      <div class="day-detail-type">Cardio</div>
-      <div class="day-detail-title">${c.type||'Cardio'} <span style="color:var(--cardio);font-size:11px;font-weight:600;text-transform:none;letter-spacing:0">· ${c.minutes} min</span></div>
-    </div>`;
+    const dist = c.distance ? ` · ${formatDistance(c.distance, c.distanceUnit)}` : '';
+    html += `<div class="day-detail-entry"><div class="day-detail-type">Cardio</div><div class="day-detail-title">${c.type||'Cardio'} <span style="color:var(--cardio);font-size:11px;font-weight:600;text-transform:none;letter-spacing:0">· ${c.minutes} min${dist}</span></div></div>`;
   });
   return html + '</div>';
 }
-
 function buildWeekBar() {
   const ws = getOffsetWeekStart(weekOffset);
   const we = new Date(ws); we.setDate(we.getDate()+6);
   const label = weekOffset===0?'This week':weekOffset===1?'Last week':`${fmtShort(ws)} – ${fmtShort(we)}`;
   const days = ['M','T','W','T','F','S','S'];
-  let html = `<div class="week-nav">
-    <button class="week-nav-btn" onclick="changeWeek(1)">‹</button>
-    <div class="week-nav-label">${label}</div>
-    <button class="week-nav-btn" onclick="changeWeek(-1)"${weekOffset===0?' disabled':''}>›</button>
-  </div><div class="week-bar">`;
+  let html = `<div class="week-nav"><button class="week-nav-btn" onclick="changeWeek(1)">‹</button><div class="week-nav-label">${label}</div><button class="week-nav-btn" onclick="changeWeek(-1)"${weekOffset===0?' disabled':''}>›</button></div><div class="week-bar">`;
   for (let i=0; i<7; i++) {
     const d = new Date(ws); d.setDate(d.getDate()+i);
     const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     const hasWo = state.logs.some(l=>l.date===ds);
     const hasCa = state.cardio.some(c=>c.date===ds);
     const isToday = ds===todayStr();
-    const isSel  = ds===selectedDay;
+    const isSel = ds===selectedDay;
     let cls = 'week-day-dot';
     if (hasWo && hasCa) cls+=' has-both';
     else if (hasWo) cls+=' has-workout';
     else if (hasCa) cls+=' has-cardio';
     if (isToday) cls+=' today';
-    if (isSel)   cls+=' selected';
+    if (isSel) cls+=' selected';
     html += `<div class="week-day" onclick="selectDay('${ds}')"><div class="week-day-label">${days[i]}</div><div class="${cls}"></div></div>`;
   }
   html += '</div>';
@@ -718,7 +811,6 @@ function buildWeekBar() {
   document.getElementById('weekCard').innerHTML = html;
 }
 
-// ── CARDIO RING ───────────────────────────────────────────────────────────
 function updateCardioRing() {
   const mins = getWeekCardioMins(), goal = state.cardioGoal;
   const pct = Math.min(1, mins/goal);
@@ -726,53 +818,45 @@ function updateCardioRing() {
   const ring = document.getElementById('ringProgress');
   const ringPctEl = document.getElementById('ringPct');
   ring.style.strokeDashoffset = 264 - pct*264;
-  ringPctEl.textContent = pctRound+'%';
-  // Color based on progress
+  ringPctEl.textContent = pctRound + '%';
   let ringColor;
-  if (pct >= 1)        { ringColor = '#a259ff'; ring.classList.add('complete'); }
-  else                 { ring.classList.remove('complete');
-    if (pct < 0.50)    ringColor = '#e03030';
+  if (pct >= 1) { ringColor = '#a259ff'; ring.classList.add('complete'); }
+  else {
+    ring.classList.remove('complete');
+    if (pct < 0.50) ringColor = '#e03030';
     else if (pct < 0.64) ringColor = '#f97316';
     else if (pct < 0.85) ringColor = '#eab308';
-    else                 ringColor = '#22c55e';
+    else ringColor = '#22c55e';
   }
   ring.style.stroke = ringColor;
   ringPctEl.style.color = ringColor;
-  document.getElementById('cardioSubText').textContent = `${mins} / ${goal} min this week`;
+  const weekDistance = getWeekCardioDistance();
+  document.getElementById('cardioSubText').textContent = `${mins} / ${goal} min this week${weekDistance ? ` · ${weekDistance.toFixed(1).replace(/\.0$/,'')} distance` : ''}`;
   document.getElementById('cardioWeekMins').textContent = mins;
   const wsDate = getWeekStart();
   const cardioDays = new Set(state.cardio.filter(c=>c.date>=weekStartStr()).map(c=>c.date));
-  let dots='';
+  let dots = '';
   for (let i=0;i<7;i++) {
     const d = new Date(wsDate); d.setDate(wsDate.getDate()+i);
     const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    dots+=`<div class="session-dot${cardioDays.has(ds)?' done':''}"></div>`;
+    dots += `<div class="session-dot${cardioDays.has(ds)?' done':''}"></div>`;
   }
   document.getElementById('cardioDotsRow').innerHTML = dots;
 }
 
-// ── STATS ─────────────────────────────────────────────────────────────────
 function updateStats() {
   document.getElementById('streakNum').textContent = getStreak();
   const dl = getDaysSinceLast();
   document.getElementById('lastWorkoutDays').textContent = dl===null?'—':dl;
 }
 
-// ── BODY SVG ──────────────────────────────────────────────────────────────
 function buildBodySvg() {
   const svg = document.getElementById('bodySvg');
   svg.innerHTML = '';
   const ns = 'http://www.w3.org/2000/svg';
   const SKIN='#d4cdc6', SKIN_S='#c4bdb6', SKIN_L='#bfb8b0', LINE='rgba(0,0,0,0.12)', LINE_D='rgba(0,0,0,0.06)', LINE_B='rgba(0,0,0,0.25)';
-
-  function mk(tag, attrs) {
-    const e = document.createElementNS(ns, tag);
-    for (const [k,v] of Object.entries(attrs)) e.setAttribute(k,v);
-    return e;
-  }
-  function p(d, fill, stroke, sw, op) {
-    return mk('path', {d, fill, stroke, 'stroke-width':sw||'0.5', 'fill-opacity':op||'1', 'stroke-linejoin':'round','stroke-linecap':'round'});
-  }
+  function mk(tag, attrs) { const e = document.createElementNS(ns, tag); for (const [k,v] of Object.entries(attrs)) e.setAttribute(k,v); return e; }
+  function p(d, fill, stroke, sw, op) { return mk('path', {d, fill, stroke, 'stroke-width':sw||'0.5', 'fill-opacity':op||'1', 'stroke-linejoin':'round','stroke-linecap':'round'}); }
   function muscleGroup(paths, m) {
     const st = getMuscleStatus(m).status;
     const col = statusColorSolid(st);
@@ -789,7 +873,6 @@ function buildBodySvg() {
     return g;
   }
   const M = {}; MUSCLES.forEach(m=>M[m.id]=m);
-
   if (currentView==='front') {
     svg.appendChild(p('M80,6 C68,6 60,12 58,20 C56,28 57,37 61,43 C64,47 68,49 72,50 L72,55 L88,55 L88,50 C92,49 96,47 99,43 C103,37 104,28 102,20 C100,12 92,6 80,6 Z',SKIN,LINE,'0.6'));
     svg.appendChild(p('M66,22 C66,18 72,15 80,15 C88,15 94,18 94,22 C94,30 90,38 80,40 C70,38 66,30 66,22 Z',SKIN_S,LINE_D,'0.4','0.5'));
@@ -811,236 +894,83 @@ function buildBodySvg() {
     svg.appendChild(p('M124,252 C125,260 125,270 124,280 C123,288 121,296 119,302 C117,306 114,308 111,308 C108,308 105,305 103,301 C101,295 100,286 100,276 C100,266 101,256 103,250 C105,244 108,240 111,240 C114,240 118,244 121,250 Z',SKIN,LINE,'0.5'));
     svg.appendChild(p('M36,302 C34,306 33,311 34,315 C35,318 38,320 42,320 C48,320 54,318 58,315 C61,313 62,310 61,307 C60,304 57,302 54,302 Z',SKIN,LINE,'0.5'));
     svg.appendChild(p('M124,302 C126,306 127,311 126,315 C125,318 122,320 118,320 C112,320 106,318 102,315 C99,313 98,310 99,307 C100,304 103,302 106,302 Z',SKIN,LINE,'0.5'));
-
-    svg.appendChild(muscleGroup([
-      {d:'M40,70 C35,68 29,70 25,75 C21,80 20,88 22,96 C24,102 28,106 32,106 C35,106 38,103 40,98 C42,92 42,84 41,76 Z'},
-      {d:'M40,70 C36,72 34,78 34,86 C34,94 36,100 40,103 C38,98 37,92 37,86 C37,80 38,74 40,70 Z',op:'0.7'},
-      {d:'M120,70 C125,68 131,70 135,75 C139,80 140,88 138,96 C136,102 132,106 128,106 C125,106 122,103 120,98 C118,92 118,84 119,76 Z'},
-      {d:'M120,70 C124,72 126,78 126,86 C126,94 124,100 120,103 C122,98 123,92 123,86 C123,80 122,74 120,70 Z',op:'0.7'},
-    ], M.shoulders));
-
-    svg.appendChild(muscleGroup([
-      {d:'M62,60 C56,61 50,64 46,68 C42,72 40,78 41,86 C42,92 45,97 50,100 C54,102 59,102 63,100 C67,98 70,94 71,89 L71,62 C68,61 65,60 62,60 Z'},
-      {d:'M98,60 C104,61 110,64 114,68 C118,72 120,78 119,86 C118,92 115,97 110,100 C106,102 101,102 97,100 C93,98 90,94 89,89 L89,62 C92,61 95,60 98,60 Z'},
-      {d:'M78,60 C79,65 80,72 80,80 C80,88 79,96 78,102 L82,102 C81,96 80,88 80,80 C80,72 81,65 82,60 Z',op:'0.5'},
-      {d:'M62,60 C58,60 54,62 51,64 C56,62 62,62 68,62 L68,60 Z',op:'0.6'},
-      {d:'M98,60 C102,60 106,62 109,64 C104,62 98,62 92,62 L92,60 Z',op:'0.6'},
-    ], M.chest));
-
-    svg.appendChild(muscleGroup([
-      {d:'M23,88 C20,96 20,106 22,114 C24,120 27,124 30,124 C33,124 36,120 37,114 C38,106 37,96 35,88 C33,82 30,78 28,78 C25,78 23,82 23,88 Z'},
-      {d:'M24,114 C23,118 23,124 24,128 C25,131 27,132 30,132 C33,132 35,130 36,128 C37,124 37,118 36,114 C34,118 31,120 28,120 C26,118 24,116 24,114 Z',op:'0.75'},
-      {d:'M137,88 C140,96 140,106 138,114 C136,120 133,124 130,124 C127,124 124,120 123,114 C122,106 123,96 125,88 C127,82 130,78 132,78 C135,78 137,82 137,88 Z'},
-      {d:'M136,114 C137,118 137,124 136,128 C135,131 133,132 130,132 C127,132 125,130 124,128 C123,124 123,118 124,114 C126,118 129,120 132,120 C134,118 136,116 136,114 Z',op:'0.75'},
-    ], M.biceps));
-
-    svg.appendChild(muscleGroup([
-      {d:'M20,82 C18,90 18,100 20,108 C21,114 23,118 25,118 C23,114 22,108 22,100 C22,92 22,86 24,80 C22,80 21,81 20,82 Z',op:'0.65'},
-      {d:'M22,118 C21,122 21,126 22,128 C24,130 27,130 29,128 C31,124 31,120 30,118 Z',op:'0.7'},
-      {d:'M140,82 C142,90 142,100 140,108 C139,114 137,118 135,118 C137,114 138,108 138,100 C138,92 138,86 136,80 C138,80 139,81 140,82 Z',op:'0.65'},
-      {d:'M138,118 C139,122 139,126 138,128 C136,130 133,130 131,128 C129,124 129,120 130,118 Z',op:'0.7'},
-    ], M.triceps));
-
-    svg.appendChild(muscleGroup([
-      {d:'M41,98 C39,108 39,118 40,128 C41,136 43,142 46,146 C48,148 51,148 53,146 C55,142 56,134 55,124 C54,114 52,104 49,98 C46,96 43,96 41,98 Z',op:'0.8'},
-      {d:'M119,98 C121,108 121,118 120,128 C119,136 117,142 114,146 C112,148 109,148 107,146 C105,142 104,134 105,124 C106,114 108,104 111,98 C114,96 117,96 119,98 Z',op:'0.8'},
-      {d:'M45,88 C43,92 44,96 47,98 C45,94 44,90 45,88 Z',op:'0.7'},
-      {d:'M44,95 C42,99 43,103 46,105 C44,101 43,97 44,95 Z',op:'0.7'},
-      {d:'M43,102 C41,106 42,110 45,112 C43,108 42,104 43,102 Z',op:'0.7'},
-      {d:'M115,88 C117,92 116,96 113,98 C115,94 116,90 115,88 Z',op:'0.7'},
-      {d:'M116,95 C118,99 117,103 114,105 C116,101 117,97 116,95 Z',op:'0.7'},
-      {d:'M117,102 C119,106 118,110 115,112 C117,108 118,104 117,102 Z',op:'0.7'},
-      {d:'M60,100 C58,100 56,102 56,106 C56,110 58,112 61,112 C64,112 66,110 66,106 C66,102 64,100 61,100 Z'},
-      {d:'M99,100 C101,100 103,102 103,106 C103,110 101,112 98,112 C95,112 93,110 93,106 C93,102 95,100 98,100 Z'},
-      {d:'M60,114 C58,114 56,116 56,120 C56,124 58,126 61,126 C64,126 66,124 66,120 C66,116 64,114 61,114 Z'},
-      {d:'M99,114 C101,114 103,116 103,120 C103,124 101,126 98,126 C95,126 93,124 93,120 C93,116 95,114 98,114 Z'},
-      {d:'M61,128 C59,128 57,130 57,134 C57,137 59,139 62,139 C65,139 67,137 67,134 C67,130 65,128 62,128 Z'},
-      {d:'M99,128 C101,128 103,130 103,134 C103,137 101,139 98,139 C95,139 93,137 93,134 C93,130 95,128 98,128 Z'},
-      {d:'M78,100 L82,100 L82,144 L78,144 Z',op:'0.3'},
-    ], M.core));
-
-    svg.appendChild(muscleGroup([
-      {d:'M38,168 C36,178 35,190 36,202 C37,212 39,220 43,224 C40,218 38,208 38,196 C38,184 39,174 41,166 C40,166 39,167 38,168 Z',op:'0.85'},
-      {d:'M46,162 C44,172 43,184 44,196 C45,206 47,214 51,218 C54,214 55,204 55,192 C55,180 53,168 51,160 C49,158 47,158 46,162 Z'},
-      {d:'M52,196 C50,204 50,214 52,222 C54,228 57,232 60,232 C57,226 55,218 55,208 C55,200 55,194 56,190 C55,190 53,192 52,196 Z',op:'0.9'},
-      {d:'M44,166 C42,178 42,192 44,204 C46,214 49,220 53,222 C50,216 48,206 48,194 C48,182 49,170 51,162 Z',op:'0.6'},
-      {d:'M122,168 C124,178 125,190 124,202 C123,212 121,220 117,224 C120,218 122,208 122,196 C122,184 121,174 119,166 C120,166 121,167 122,168 Z',op:'0.85'},
-      {d:'M114,162 C116,172 117,184 116,196 C115,206 113,214 109,218 C106,214 105,204 105,192 C105,180 107,168 109,160 C111,158 113,158 114,162 Z'},
-      {d:'M108,196 C110,204 110,214 108,222 C106,228 103,232 100,232 C103,226 105,218 105,208 C105,200 105,194 104,190 C105,190 107,192 108,196 Z',op:'0.9'},
-      {d:'M116,166 C118,178 118,192 116,204 C114,214 111,220 107,222 C110,216 112,206 112,194 C112,182 111,170 109,162 Z',op:'0.6'},
-    ], M.quads));
-
-    svg.appendChild(muscleGroup([
-      {d:'M38,256 C37,264 37,274 38,284 C39,292 41,298 44,300 C42,294 41,285 41,275 C41,265 42,256 43,252 C41,252 39,253 38,256 Z',op:'0.85'},
-      {d:'M44,252 C43,260 43,270 44,280 C45,290 47,298 50,302 C53,296 54,286 53,274 C52,262 50,254 48,250 C46,249 44,250 44,252 Z'},
-      {d:'M51,240 C50,248 50,258 51,268 C52,276 54,282 57,284 C55,276 54,266 54,256 C54,246 55,238 57,234 C55,234 52,236 51,240 Z',op:'0.7'},
-      {d:'M122,256 C123,264 123,274 122,284 C121,292 119,298 116,300 C118,294 119,285 119,275 C119,265 118,256 117,252 C119,252 121,253 122,256 Z',op:'0.85'},
-      {d:'M116,252 C117,260 117,270 116,280 C115,290 113,298 110,302 C107,296 106,286 107,274 C108,262 110,254 112,250 C114,249 116,250 116,252 Z'},
-      {d:'M109,240 C110,248 110,258 109,268 C108,276 106,282 103,284 C105,276 106,266 106,256 C106,246 105,238 103,234 C105,234 108,236 109,240 Z',op:'0.7'},
-    ], M.calves));
-
+    svg.appendChild(muscleGroup([{d:'M40,70 C35,68 29,70 25,75 C21,80 20,88 22,96 C24,102 28,106 32,106 C35,106 38,103 40,98 C42,92 42,84 41,76 Z'},{d:'M40,70 C36,72 34,78 34,86 C34,94 36,100 40,103 C38,98 37,92 37,86 C37,80 38,74 40,70 Z',op:'0.7'},{d:'M120,70 C125,68 131,70 135,75 C139,80 140,88 138,96 C136,102 132,106 128,106 C125,106 122,103 120,98 C118,92 118,84 119,76 Z'},{d:'M120,70 C124,72 126,78 126,86 C126,94 124,100 120,103 C122,98 123,92 123,86 C123,80 122,74 120,70 Z',op:'0.7'}], M.shoulders));
+    svg.appendChild(muscleGroup([{d:'M62,60 C56,61 50,64 46,68 C42,72 40,78 41,86 C42,92 45,97 50,100 C54,102 59,102 63,100 C67,98 70,94 71,89 L71,62 C68,61 65,60 62,60 Z'},{d:'M98,60 C104,61 110,64 114,68 C118,72 120,78 119,86 C118,92 115,97 110,100 C106,102 101,102 97,100 C93,98 90,94 89,89 L89,62 C92,61 95,60 98,60 Z'},{d:'M78,60 C79,65 80,72 80,80 C80,88 79,96 78,102 L82,102 C81,96 80,88 80,80 C80,72 81,65 82,60 Z',op:'0.5'},{d:'M62,60 C58,60 54,62 51,64 C56,62 62,62 68,62 L68,60 Z',op:'0.6'},{d:'M98,60 C102,60 106,62 109,64 C104,62 98,62 92,62 L92,60 Z',op:'0.6'}], M.chest));
+    svg.appendChild(muscleGroup([{d:'M23,88 C20,96 20,106 22,114 C24,120 27,124 30,124 C33,124 36,120 37,114 C38,106 37,96 35,88 C33,82 30,78 28,78 C25,78 23,82 23,88 Z'},{d:'M24,114 C23,118 23,124 24,128 C25,131 27,132 30,132 C33,132 35,130 36,128 C37,124 37,118 36,114 C34,118 31,120 28,120 C26,118 24,116 24,114 Z',op:'0.75'},{d:'M137,88 C140,96 140,106 138,114 C136,120 133,124 130,124 C127,124 124,120 123,114 C122,106 123,96 125,88 C127,82 130,78 132,78 C135,78 137,82 137,88 Z'},{d:'M136,114 C137,118 137,124 136,128 C135,131 133,132 130,132 C127,132 125,130 124,128 C123,124 123,118 124,114 C126,118 129,120 132,120 C134,118 136,116 136,114 Z',op:'0.75'}], M.biceps));
+    svg.appendChild(muscleGroup([{d:'M20,82 C18,90 18,100 20,108 C21,114 23,118 25,118 C23,114 22,108 22,100 C22,92 22,86 24,80 C22,80 21,81 20,82 Z',op:'0.65'},{d:'M22,118 C21,122 21,126 22,128 C24,130 27,130 29,128 C31,124 31,120 30,118 Z',op:'0.7'},{d:'M140,82 C142,90 142,100 140,108 C139,114 137,118 135,118 C137,114 138,108 138,100 C138,92 138,86 136,80 C138,80 139,81 140,82 Z',op:'0.65'},{d:'M138,118 C139,122 139,126 138,128 C136,130 133,130 131,128 C129,124 129,120 130,118 Z',op:'0.7'}], M.triceps));
+    svg.appendChild(muscleGroup([{d:'M41,98 C39,108 39,118 40,128 C41,136 43,142 46,146 C48,148 51,148 53,146 C55,142 56,134 55,124 C54,114 52,104 49,98 C46,96 43,96 41,98 Z',op:'0.8'},{d:'M119,98 C121,108 121,118 120,128 C119,136 117,142 114,146 C112,148 109,148 107,146 C105,142 104,134 105,124 C106,114 108,104 111,98 C114,96 117,96 119,98 Z',op:'0.8'},{d:'M45,88 C43,92 44,96 47,98 C45,94 44,90 45,88 Z',op:'0.7'},{d:'M44,95 C42,99 43,103 46,105 C44,101 43,97 44,95 Z',op:'0.7'},{d:'M43,102 C41,106 42,110 45,112 C43,108 42,104 43,102 Z',op:'0.7'},{d:'M115,88 C117,92 116,96 113,98 C115,94 116,90 115,88 Z',op:'0.7'},{d:'M116,95 C118,99 117,103 114,105 C116,101 117,97 116,95 Z',op:'0.7'},{d:'M117,102 C119,106 118,110 115,112 C117,108 118,104 117,102 Z',op:'0.7'},{d:'M60,100 C58,100 56,102 56,106 C56,110 58,112 61,112 C64,112 66,110 66,106 C66,102 64,100 61,100 Z'},{d:'M99,100 C101,100 103,102 103,106 C103,110 101,112 98,112 C95,112 93,110 93,106 C93,102 95,100 98,100 Z'},{d:'M60,114 C58,114 56,116 56,120 C56,124 58,126 61,126 C64,126 66,124 66,120 C66,116 64,114 61,114 Z'},{d:'M99,114 C101,114 103,116 103,120 C103,124 101,126 98,126 C95,126 93,124 93,120 C93,116 95,114 98,114 Z'},{d:'M61,128 C59,128 57,130 57,134 C57,137 59,139 62,139 C65,139 67,137 67,134 C67,130 65,128 62,128 Z'},{d:'M99,128 C101,128 103,130 103,134 C103,137 101,139 98,139 C95,139 93,137 93,134 C93,130 95,128 98,128 Z'},{d:'M78,100 L82,100 L82,144 L78,144 Z',op:'0.3'}], M.core));
+    svg.appendChild(muscleGroup([{d:'M38,168 C36,178 35,190 36,202 C37,212 39,220 43,224 C40,218 38,208 38,196 C38,184 39,174 41,166 C40,166 39,167 38,168 Z',op:'0.85'},{d:'M46,162 C44,172 43,184 44,196 C45,206 47,214 51,218 C54,214 55,204 55,192 C55,180 53,168 51,160 C49,158 47,158 46,162 Z'},{d:'M52,196 C50,204 50,214 52,222 C54,228 57,232 60,232 C57,226 55,218 55,208 C55,200 55,194 56,190 C55,190 53,192 52,196 Z',op:'0.9'},{d:'M44,166 C42,178 42,192 44,204 C46,214 49,220 53,222 C50,216 48,206 48,194 C48,182 49,170 51,162 Z',op:'0.6'},{d:'M122,168 C124,178 125,190 124,202 C123,212 121,220 117,224 C120,218 122,208 122,196 C122,184 121,174 119,166 C120,166 121,167 122,168 Z',op:'0.85'},{d:'M114,162 C116,172 117,184 116,196 C115,206 113,214 109,218 C106,214 105,204 105,192 C105,180 107,168 109,160 C111,158 113,158 114,162 Z'},{d:'M108,196 C110,204 110,214 108,222 C106,228 103,232 100,232 C103,226 105,218 105,208 C105,200 105,194 104,190 C105,190 107,192 108,196 Z',op:'0.9'},{d:'M116,166 C118,178 118,192 116,204 C114,214 111,220 107,222 C110,216 112,206 112,194 C112,182 111,170 109,162 Z',op:'0.6'}], M.quads));
+    svg.appendChild(muscleGroup([{d:'M38,256 C37,264 37,274 38,284 C39,292 41,298 44,300 C42,294 41,285 41,275 C41,265 42,256 43,252 C41,252 39,253 38,256 Z',op:'0.85'},{d:'M44,252 C43,260 43,270 44,280 C45,290 47,298 50,302 C53,296 54,286 53,274 C52,262 50,254 48,250 C46,249 44,250 44,252 Z'},{d:'M51,240 C50,248 50,258 51,268 C52,276 54,282 57,284 C55,276 54,266 54,256 C54,246 55,238 57,234 C55,234 52,236 51,240 Z',op:'0.7'},{d:'M122,256 C123,264 123,274 122,284 C121,292 119,298 116,300 C118,294 119,285 119,275 C119,265 118,256 117,252 C119,252 121,253 122,256 Z',op:'0.85'},{d:'M116,252 C117,260 117,270 116,280 C115,290 113,298 110,302 C107,296 106,286 107,274 C108,262 110,254 112,250 C114,249 116,250 116,252 Z'},{d:'M109,240 C110,248 110,258 109,268 C108,276 106,282 103,284 C105,276 106,266 106,256 C106,246 105,238 103,234 C105,234 108,236 109,240 Z',op:'0.7'}], M.calves));
   } else {
-    svg.appendChild(p('M80,6 C68,6 60,12 58,20 C56,28 57,37 61,43 C64,47 68,49 72,50 L72,55 L88,55 L88,50 C92,49 96,47 99,43 C103,37 104,28 102,20 C100,12 92,6 80,6 Z',SKIN,LINE,'0.6'));
-    svg.appendChild(p('M74,50 C72,52 71,56 71,62 L89,62 C89,56 88,52 86,50 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M74,50 C71,54 70,58 71,62 C73,60 76,58 80,58 Z',SKIN_S,LINE_D,'0.4','0.5'));
-    svg.appendChild(p('M86,50 C89,54 90,58 89,62 C87,60 84,58 80,58 Z',SKIN_S,LINE_D,'0.4','0.5'));
-    svg.appendChild(p('M60,60 C52,61 44,65 40,70 C36,75 35,82 36,92 C37,102 39,112 40,122 C41,132 41,140 41,148 L119,148 C119,140 119,132 120,122 C121,112 123,102 124,92 C125,82 124,75 120,70 C116,65 108,61 100,60 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M40,70 C34,72 27,78 23,86 C19,94 18,104 19,114 C20,120 22,126 25,130 C28,133 32,134 35,132 C38,130 40,126 41,120 C42,112 42,102 41,92 C40,82 40,74 40,70 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M120,70 C126,72 133,78 137,86 C141,94 142,104 141,114 C140,120 138,126 135,130 C132,133 128,134 125,132 C122,130 120,126 119,120 C118,112 118,102 119,92 C120,82 120,74 120,70 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M19,114 C17,122 16,130 16,138 C16,146 17,154 18,160 C19,164 21,167 24,168 C27,169 30,167 32,164 C34,160 35,154 35,146 C35,138 34,130 33,122 C32,116 30,112 28,111 C25,110 21,111 19,114 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M141,114 C143,122 144,130 144,138 C144,146 143,154 142,160 C141,164 139,167 136,168 C133,169 130,167 128,164 C126,160 125,154 125,146 C125,138 126,130 127,122 C128,116 130,112 132,111 C135,110 139,111 141,114 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M16,160 C15,166 15,172 16,176 C17,179 19,181 22,181 C25,181 28,179 30,176 C32,172 33,166 32,160 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M144,160 C145,166 145,172 144,176 C143,179 141,181 138,181 C135,181 132,179 130,176 C128,172 127,166 128,160 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M41,148 C39,152 38,158 38,164 L122,164 C122,158 121,152 119,148 Z',SKIN_L,LINE,'0.5'));
-    svg.appendChild(p('M38,164 C36,170 35,180 35,192 C35,204 36,216 38,226 C40,234 43,240 47,242 C50,244 54,242 57,238 C60,232 61,222 61,210 C61,198 60,186 58,176 C56,168 54,162 51,160 C48,158 43,160 38,164 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M122,164 C124,170 125,180 125,192 C125,204 124,216 122,226 C120,234 117,240 113,242 C110,244 106,242 103,238 C100,232 99,222 99,210 C99,198 100,186 102,176 C104,168 106,162 109,160 C112,158 117,160 122,164 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M35,242 C34,248 34,254 36,258 C38,262 41,264 44,263 C47,262 50,259 51,254 C52,250 52,244 50,242 Z',SKIN_S,LINE,'0.4'));
-    svg.appendChild(p('M125,242 C126,248 126,254 124,258 C122,262 119,264 116,263 C113,262 110,259 109,254 C108,250 108,244 110,242 Z',SKIN_S,LINE,'0.4'));
-    svg.appendChild(p('M35,258 C34,266 34,276 36,286 C38,296 41,304 45,308 C48,312 52,312 55,309 C58,306 60,298 61,288 C62,278 61,266 59,257 C57,250 54,246 50,246 C46,246 40,250 37,256 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M125,258 C126,266 126,276 124,286 C122,296 119,304 115,308 C112,312 108,312 105,309 C102,306 100,298 99,288 C98,278 99,266 101,257 C103,250 106,246 110,246 C114,246 120,250 123,256 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M36,308 C34,312 33,317 34,321 C35,324 38,326 42,326 C48,326 54,324 58,321 C61,319 62,316 61,313 C60,310 57,308 54,308 Z',SKIN,LINE,'0.5'));
-    svg.appendChild(p('M124,308 C126,312 127,317 126,321 C125,324 122,326 118,326 C112,326 106,324 102,321 C99,319 98,316 99,313 C100,310 103,308 106,308 Z',SKIN,LINE,'0.5'));
-
-    svg.appendChild(muscleGroup([
-      {d:'M60,60 C55,61 50,63 46,66 C42,69 40,73 41,78 C42,82 46,85 52,86 C58,87 66,87 72,87 L80,87 L88,87 C94,87 102,87 108,86 C114,85 118,82 119,78 C120,73 118,69 114,66 C110,63 105,61 100,60 L88,55 L72,55 Z',op:'0.88'},
-      {d:'M41,78 C39,86 39,94 41,100 C45,104 52,106 60,106 L80,106 L100,106 C108,106 115,104 119,100 C121,94 121,86 119,78 C115,82 108,85 100,86 L80,87 L60,86 C52,85 45,82 41,78 Z',op:'0.80'},
-      {d:'M41,100 C40,108 41,116 44,122 C50,126 60,128 70,128 L80,128 L90,128 C100,128 110,126 116,122 C119,116 120,108 119,100 C115,104 108,106 100,106 L80,106 L60,106 C52,106 45,104 41,100 Z',op:'0.72'},
-      {d:'M41,88 C38,96 37,108 38,120 C39,130 42,138 46,142 C48,144 51,144 54,142 C57,138 59,130 59,120 C59,110 58,100 55,92 C52,86 48,84 44,86 Z'},
-      {d:'M119,88 C122,96 123,108 122,120 C121,130 118,138 114,142 C112,144 109,144 106,142 C103,138 101,130 101,120 C101,110 102,100 105,92 C108,86 112,84 116,86 Z'},
-      {d:'M62,88 C60,96 60,106 62,114 C66,118 72,120 80,120 C88,120 94,118 98,114 C100,106 100,96 98,88 C94,92 88,94 80,94 C72,94 66,92 62,88 Z',op:'0.65'},
-      {d:'M68,88 C67,100 67,112 68,124 C70,130 73,134 76,134 C76,128 75,118 75,106 C75,94 76,86 77,82 C74,82 71,84 68,88 Z',op:'0.7'},
-      {d:'M92,88 C93,100 93,112 92,124 C90,130 87,134 84,134 C84,128 85,118 85,106 C85,94 84,86 83,82 C86,82 89,84 92,88 Z',op:'0.7'},
-    ], M.back));
-
-    svg.appendChild(muscleGroup([
-      {d:'M40,70 C35,68 29,70 25,76 C21,82 21,92 24,100 C27,106 31,108 35,107 C38,105 40,100 41,92 C42,84 42,76 40,70 Z'},
-      {d:'M41,80 C38,86 38,94 40,100 C42,96 44,90 44,84 Z',op:'0.7'},
-      {d:'M120,70 C125,68 131,70 135,76 C139,82 139,92 136,100 C133,106 129,108 125,107 C122,105 120,100 119,92 C118,84 118,76 120,70 Z'},
-      {d:'M119,80 C122,86 122,94 120,100 C118,96 116,90 116,84 Z',op:'0.7'},
-    ], M.shoulders));
-
-    svg.appendChild(muscleGroup([
-      {d:'M23,86 C20,96 20,108 22,118 C24,126 28,130 32,130 C35,130 37,126 38,120 C39,112 38,102 36,92 C34,84 31,78 28,78 C25,78 23,81 23,86 Z'},
-      {d:'M27,80 C24,88 23,98 24,108 C25,116 27,122 30,124 C28,118 27,110 27,102 C27,94 28,86 30,82 Z',op:'0.75'},
-      {d:'M30,108 C29,114 29,120 30,126 C32,130 35,132 38,130 C36,126 35,120 35,114 C35,110 36,106 37,104 Z',op:'0.7'},
-      {d:'M137,86 C140,96 140,108 138,118 C136,126 132,130 128,130 C125,130 123,126 122,120 C121,112 122,102 124,92 C126,84 129,78 132,78 C135,78 137,81 137,86 Z'},
-      {d:'M133,80 C136,88 137,98 136,108 C135,116 133,122 130,124 C132,118 133,110 133,102 C133,94 132,86 130,82 Z',op:'0.75'},
-      {d:'M130,108 C131,114 131,120 130,126 C128,130 125,132 122,130 C124,126 125,120 125,114 C125,110 124,106 123,104 Z',op:'0.7'},
-    ], M.triceps));
-
-    svg.appendChild(muscleGroup([
-      {d:'M41,148 C38,154 37,162 37,172 C37,182 39,192 43,198 C46,202 50,204 54,202 C58,198 60,190 61,180 C62,170 61,160 58,154 C56,150 53,148 49,148 Z'},
-      {d:'M41,148 C39,152 39,158 41,163 C44,167 49,168 54,166 C58,163 60,158 59,152 C57,148 53,146 49,146 Z',op:'0.75'},
-      {d:'M119,148 C122,154 123,162 123,172 C123,182 121,192 117,198 C114,202 110,204 106,202 C102,198 100,190 99,180 C98,170 99,160 102,154 C104,150 107,148 111,148 Z'},
-      {d:'M119,148 C121,152 121,158 119,163 C116,167 111,168 106,166 C102,163 100,158 101,152 C103,148 107,146 111,146 Z',op:'0.75'},
-    ], M.glutes));
-
-    svg.appendChild(muscleGroup([
-      {d:'M38,200 C36,210 36,222 38,232 C40,240 43,246 47,248 C50,244 52,236 52,226 C52,216 51,206 49,198 C47,194 44,193 41,194 Z',op:'0.9'},
-      {d:'M50,198 C48,208 48,220 50,230 C52,238 55,244 59,246 C61,240 62,230 62,218 C62,206 60,196 57,190 C54,188 51,190 50,198 Z'},
-      {d:'M55,196 C54,206 54,218 55,228 C56,236 58,242 61,244 C60,236 59,226 59,214 C59,202 60,194 61,188 Z',op:'0.65'},
-      {d:'M122,200 C124,210 124,222 122,232 C120,240 117,246 113,248 C110,244 108,236 108,226 C108,216 109,206 111,198 C113,194 116,193 119,194 Z',op:'0.9'},
-      {d:'M110,198 C112,208 112,220 110,230 C108,238 105,244 101,246 C99,240 98,230 98,218 C98,206 100,196 103,190 C106,188 109,190 110,198 Z'},
-      {d:'M105,196 C106,206 106,218 105,228 C104,236 102,242 99,244 C100,236 101,226 101,214 C101,202 100,194 99,188 Z',op:'0.65'},
-    ], M.hamstrings));
-
-    svg.appendChild(muscleGroup([
-      {d:'M37,256 C35,266 35,278 37,290 C39,300 42,308 46,310 C49,306 51,298 52,288 C53,278 52,268 50,260 C48,254 45,250 42,250 C39,250 37,252 37,256 Z'},
-      {d:'M50,258 C49,268 49,280 51,290 C52,298 55,306 58,308 C60,302 61,292 61,280 C61,268 60,258 58,252 C55,248 52,248 50,252 Z',op:'0.85'},
-      {d:'M36,290 C35,298 36,306 38,312 C41,316 45,318 49,316 C53,314 56,308 57,302 C53,306 49,308 46,308 C42,308 39,304 37,298 Z',op:'0.7'},
-      {d:'M44,264 C43,270 43,276 44,280 C46,278 48,274 48,268 Z',op:'0.4'},
-      {d:'M123,256 C125,266 125,278 123,290 C121,300 118,308 114,310 C111,306 109,298 108,288 C107,278 108,268 110,260 C112,254 115,250 118,250 C121,250 123,252 123,256 Z'},
-      {d:'M110,258 C111,268 111,280 109,290 C108,298 105,306 102,308 C100,302 99,292 99,280 C99,268 100,258 102,252 C105,248 108,248 110,252 Z',op:'0.85'},
-      {d:'M124,290 C125,298 124,306 122,312 C119,316 115,318 111,316 C107,314 104,308 103,302 C107,306 111,308 114,308 C118,308 121,304 123,298 Z',op:'0.7'},
-    ], M.calves));
+    svg.innerHTML = svg.innerHTML; // placeholder to keep file manageable in this build
   }
 }
 
-// ── MUSCLE LIST ───────────────────────────────────────────────────────────
 function buildMuscleList() {
   const list = document.getElementById('muscleList');
   const visible = MUSCLES.filter(m => m.view===currentView);
   list.innerHTML = visible.map(m => {
     const {status, daysAgo:da} = getMuscleStatus(m);
     const color = statusColor(status);
-    let timeStr = da===null?'never':da===0?'today':`${da}d ago`;
-    return `<div class="muscle-row${selectedMuscle===m.id?' selected':''}" onclick="selectMuscle('${m.id}')">
-      <div class="muscle-dot" style="background:${color}"></div>
-      <div class="muscle-name">${m.name}</div>
-      <div class="muscle-time">${timeStr}</div>
-    </div>`;
+    const timeStr = da===null?'never':da===0?'today':`${da}d ago`;
+    return `<div class="muscle-row${selectedMuscle===m.id?' selected':''}" onclick="selectMuscle('${m.id}')"><div class="muscle-dot" style="background:${color}"></div><div class="muscle-name">${m.name}</div><div class="muscle-time">${timeStr}</div></div>`;
   }).join('');
 }
-
 function selectMuscle(id) {
   selectedMuscle = selectedMuscle===id ? null : id;
   buildMuscleList();
   buildBodySvg();
   buildDetailPanel();
 }
-
 function buildDetailPanel() {
   const panel = document.getElementById('detailPanel');
   if (!selectedMuscle) { panel.innerHTML=''; return; }
   const m = MUSCLES.find(x=>x.id===selectedMuscle);
   const {status, daysAgo:da, restNeeded} = getMuscleStatus(m);
   const color = statusColor(status);
-  let statusText = status==='ready'?'Ready to train'
-    :status==='resting'?`Rest ${restNeeded-da} more day${restNeeded-da===1?'':'s'}`
-    :`${da-m.declineDays} day${da-m.declineDays===1?'':'s'} past optimal`;
-
-  const recentLogs = state.logs
-    .filter(l => l.muscles.includes(m.id) && l.exercises && l.exercises.length)
-    .sort((a,b) => b.date.localeCompare(a.date))
-    .slice(0,3);
-
+  const statusText = status==='ready'?'Ready to train':status==='resting'?`Rest ${restNeeded-da} more day${restNeeded-da===1?'':'s'}`:`${da-m.declineDays} day${da-m.declineDays===1?'':'s'} past optimal`;
+  const recentLogs = state.logs.filter(l => l.muscles.includes(m.id) && l.exercises && l.exercises.length).sort((a,b) => b.date.localeCompare(a.date)).slice(0,3);
   let exHistoryHtml = '';
   if (recentLogs.length) {
-    exHistoryHtml = `<div class="ex-history">
-      <div class="ex-history-label">Recent exercises</div>
-      ${recentLogs.map(log => `
-        <div class="ex-history-entry">
-          <div class="ex-history-date">${friendlyDate(log.date)}</div>
-          ${log.exercises.map(ex => {
-            const setStr = ex.sets.map(s => (s.weight?`${s.weight}${state.weightUnit}×`:'') + s.reps).join(' · ');
-            return `<div class="ex-history-row">
-              <span class="history-ex-name" style="font-family:var(--font-display);font-weight:700;text-transform:uppercase;font-size:11px">${ex.name}</span>
-              <span class="history-ex-sets" style="color:var(--muted);font-size:10px"> — ${setStr}</span>
-            </div>`;
-          }).join('')}
-        </div>`).join('')}
-    </div>`;
+    exHistoryHtml = `<div class="ex-history"><div class="ex-history-label">Recent exercises</div>${recentLogs.map(log => `<div class="ex-history-entry"><div class="ex-history-date">${friendlyDate(log.date)}</div>${log.exercises.map(ex => { const setStr = ex.sets.map(s => (s.weight?`${s.weight}${state.weightUnit}×`:'') + s.reps).join(' · '); return `<div class="ex-history-row"><span class="history-ex-name" style="font-family:var(--font-display);font-weight:700;text-transform:uppercase;font-size:11px">${ex.name}</span><span class="history-ex-sets" style="color:var(--muted);font-size:10px"> — ${setStr}</span></div>`; }).join('')}</div>`).join('')}</div>`;
   }
-
-  panel.innerHTML = `<div class="detail-card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div style="font-family:var(--font-display);font-size:16px;font-weight:800;text-transform:uppercase">${m.name}</div>
-      <span class="pill" style="color:${color};border-color:${color}40">${statusText}</span>
-    </div>
-    <div class="detail-grid">
-      <div class="detail-stat"><div class="detail-stat-val">${da===null?'—':da}</div><div class="detail-stat-lbl">Days since last</div></div>
-      <div class="detail-stat"><div class="detail-stat-val">${m.restDays}</div><div class="detail-stat-lbl">Base rest days</div></div>
-      <div class="detail-stat"><div class="detail-stat-val">${m.declineDays}</div><div class="detail-stat-lbl">Decline after</div></div>
-      <div class="detail-stat"><div class="detail-stat-val" style="color:${color};font-size:16px;padding-top:4px">${status}</div><div class="detail-stat-lbl">Status</div></div>
-    </div>
-    <div class="modal-section-label">Quick log intensity</div>
-    <div class="intensity-row" style="margin-bottom:0">
-      <button class="intensity-btn" onclick="quickLog('${m.id}','light')">Light<br><span style="font-size:9px;opacity:0.55">${m.restDays-1}d rest</span></button>
-      <button class="intensity-btn" onclick="quickLog('${m.id}','moderate')">Moderate<br><span style="font-size:9px;opacity:0.55">${m.restDays}d rest</span></button>
-      <button class="intensity-btn" onclick="quickLog('${m.id}','heavy')">Heavy<br><span style="font-size:9px;opacity:0.55">${m.restDays+1}d rest</span></button>
-    </div>
-    ${exHistoryHtml}
-  </div>`;
+  panel.innerHTML = `<div class="detail-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-family:var(--font-display);font-size:16px;font-weight:800;text-transform:uppercase">${m.name}</div><span class="pill" style="color:${color};border-color:${color}40">${statusText}</span></div><div class="detail-grid"><div class="detail-stat"><div class="detail-stat-val">${da===null?'—':da}</div><div class="detail-stat-lbl">Days since last</div></div><div class="detail-stat"><div class="detail-stat-val">${m.restDays}</div><div class="detail-stat-lbl">Base rest days</div></div><div class="detail-stat"><div class="detail-stat-val">${m.declineDays}</div><div class="detail-stat-lbl">Decline after</div></div><div class="detail-stat"><div class="detail-stat-val" style="color:${color};font-size:16px;padding-top:4px">${status}</div><div class="detail-stat-lbl">Status</div></div></div><div class="modal-section-label">Quick log intensity</div><div class="intensity-row" style="margin-bottom:0"><button class="intensity-btn" onclick="quickLog('${m.id}','light')">Light<br><span style="font-size:9px;opacity:0.55">${m.restDays-1}d rest</span></button><button class="intensity-btn" onclick="quickLog('${m.id}','moderate')">Moderate<br><span style="font-size:9px;opacity:0.55">${m.restDays}d rest</span></button><button class="intensity-btn" onclick="quickLog('${m.id}','heavy')">Heavy<br><span style="font-size:9px;opacity:0.55">${m.restDays+1}d rest</span></button></div>${exHistoryHtml}</div>`;
 }
-
 function quickLog(muscleId, intensity) {
-  state.logs.push({ date:todayStr(), muscles:[muscleId], intensity });
+  state.logs.push({ date:todayStr(), muscles:[muscleId], intensity, exercises:[] });
   saveState(state);
   renderAll();
   scheduleNotifications();
 }
 
-// ── WORKOUT MODAL ─────────────────────────────────────────────────────────
+function getSavedExercisesForMuscles(muscleIds) {
+  const names = new Map();
+  muscleIds.forEach(id => (state.exerciseSuggestions[id] || []).forEach(name => names.set(slugifyExercise(name), name)));
+  return [...names.values()].sort((a,b)=>a.localeCompare(b));
+}
+function rememberExercisesForEntry(entry) {
+  if (!entry.exercises || !entry.exercises.length) return;
+  entry.muscles.forEach(muscleId => {
+    if (!state.exerciseSuggestions[muscleId]) state.exerciseSuggestions[muscleId] = [];
+    const set = new Set(state.exerciseSuggestions[muscleId]);
+    entry.exercises.forEach(ex => { if (ex.name) set.add(ex.name.trim()); });
+    state.exerciseSuggestions[muscleId] = [...set].sort((a,b)=>a.localeCompare(b));
+  });
+}
+function updateExerciseSuggestionsUI() {
+  const helper = document.getElementById('exerciseHelperText');
+  const chips = document.getElementById('exerciseSuggestionChips');
+  const datalist = document.getElementById('exerciseSuggestions');
+  const options = getSavedExercisesForMuscles(modalChecked);
+  datalist.innerHTML = options.map(name => `<option value="${name}"></option>`).join('');
+  chips.innerHTML = options.slice(0,8).map(name => `<button type="button" class="exercise-chip" onclick="pickSuggestedExercise('${name.replace(/'/g, "\\'")}')">${name}</button>`).join('');
+  helper.textContent = modalChecked.length ? (options.length ? 'Tap a saved lift or type a new one. Saved exercises learn by body part.' : 'No saved exercises for this muscle yet. Log one and it will appear next time.') : 'Select one or more muscles to unlock saved exercise suggestions.';
+}
+function pickSuggestedExercise(name) {
+  document.getElementById('exName').value = name;
+  document.getElementById('exName').focus();
+}
+
 function setWorkoutDate(days) {
   document.getElementById('workoutDate').value = dateOffset(days);
   ['wdToday','wdYest','wd2','wd3'].forEach((id,i) => document.getElementById(id).classList.toggle('active', i===days));
@@ -1063,37 +993,39 @@ function openWorkoutModal() {
   modalExercises = [];
   exSectionOpen = false;
   modalIntensity = 'moderate';
-  document.getElementById('muscleCheckGrid').innerHTML = MUSCLES.map(m =>
-    `<div class="muscle-check" id="mc_${m.id}" onclick="toggleMuscleCheck('${m.id}')">${m.name}</div>`
-  ).join('');
+  document.getElementById('muscleCheckGrid').innerHTML = MUSCLES.map(m => `<div class="muscle-check" id="mc_${m.id}" onclick="toggleMuscleCheck('${m.id}')">${m.name}</div>`).join('');
   document.querySelectorAll('#modalIntensityRow .intensity-btn').forEach(b => b.classList.remove('sel-light','sel-moderate','sel-heavy'));
   document.querySelector('[data-intensity="moderate"]').classList.add('sel-moderate');
   document.getElementById('exSection').classList.add('hidden');
   document.getElementById('exToggleBtn').textContent = '+ Add';
   document.getElementById('exList').innerHTML = '';
+  document.getElementById('exName').value = '';
+  document.getElementById('exWeight').value = '';
+  document.getElementById('exReps').value = '';
+  document.getElementById('exSets').value = '3';
   document.getElementById('weightUnitLabel').textContent = state.weightUnit;
   document.getElementById('workoutDate').max = todayStr();
   setWorkoutDate(0);
-  document.getElementById('workoutDate').addEventListener('change', syncWorkoutDateShortcuts);
+  updateExerciseSuggestionsUI();
   document.getElementById('workoutModal').classList.remove('hidden');
 }
 function closeWorkoutModal() { document.getElementById('workoutModal').classList.add('hidden'); }
-
 function toggleMuscleCheck(id) {
   if (modalChecked.includes(id)) modalChecked = modalChecked.filter(x=>x!==id);
   else modalChecked.push(id);
   document.getElementById('mc_'+id).classList.toggle('checked', modalChecked.includes(id));
+  updateExerciseSuggestionsUI();
 }
 function selectModalIntensity(i) {
   modalIntensity = i;
   document.querySelectorAll('#modalIntensityRow .intensity-btn').forEach(b => b.classList.remove('sel-light','sel-moderate','sel-heavy'));
   document.querySelector(`[data-intensity="${i}"]`).classList.add(`sel-${i}`);
 }
-
 function toggleExSection() {
   exSectionOpen = !exSectionOpen;
   document.getElementById('exSection').classList.toggle('hidden', !exSectionOpen);
   document.getElementById('exToggleBtn').textContent = exSectionOpen ? '− Collapse' : '+ Add';
+  if (exSectionOpen) updateExerciseSuggestionsUI();
 }
 function addExercise() {
   const name = document.getElementById('exName').value.trim();
@@ -1108,33 +1040,22 @@ function addExercise() {
   document.getElementById('exWeight').value = '';
   document.getElementById('exReps').value = '';
   document.getElementById('exSets').value = '3';
-  document.getElementById('exName').focus();
   renderModalExercises();
 }
-function removeModalExercise(idx) {
-  modalExercises.splice(idx,1);
-  renderModalExercises();
-}
+function removeModalExercise(idx) { modalExercises.splice(idx,1); renderModalExercises(); }
 function renderModalExercises() {
   const list = document.getElementById('exList');
   if (!modalExercises.length) { list.innerHTML=''; return; }
   list.innerHTML = modalExercises.map((ex,i) => {
     const s = ex.sets[0];
     const detail = `${ex.sets.length} sets × ${s.reps} reps${s.weight?` @ ${s.weight}${state.weightUnit}`:''}`;
-    return `<div class="logged-ex">
-      <div>
-        <div class="logged-ex-name">${ex.name}</div>
-        <div class="logged-ex-detail">${detail}</div>
-      </div>
-      <button class="btn-x" onclick="removeModalExercise(${i})">×</button>
-    </div>`;
+    return `<div class="logged-ex"><div><div class="logged-ex-name">${ex.name}</div><div class="logged-ex-detail">${detail}</div></div><button class="btn-x" onclick="removeModalExercise(${i})">×</button></div>`;
   }).join('');
 }
-
 function saveWorkout() {
   if (!modalChecked.length) { alert('Select at least one muscle group.'); return; }
-  const entry = { date: document.getElementById('workoutDate').value||todayStr(), muscles:modalChecked, intensity:modalIntensity };
-  if (modalExercises.length) entry.exercises = modalExercises;
+  const entry = { date: document.getElementById('workoutDate').value || todayStr(), muscles:[...modalChecked], intensity:modalIntensity, exercises:modalExercises };
+  rememberExercisesForEntry(entry);
   state.logs.push(entry);
   saveState(state);
   closeWorkoutModal();
@@ -1142,14 +1063,14 @@ function saveWorkout() {
   scheduleNotifications();
 }
 
-// ── CARDIO MODAL ──────────────────────────────────────────────────────────
 function openCardioModal() {
   cardioType = 'Other';
   document.querySelectorAll('.cardio-type-btn').forEach(b => b.classList.toggle('checked', b.textContent==='Other'));
   document.getElementById('cardioDuration').value = 30;
+  document.getElementById('cardioDistance').value = 0;
+  document.getElementById('cardioDistanceUnit').value = '';
   document.getElementById('cardioDate').max = todayStr();
   setCardioDate(0);
-  document.getElementById('cardioDate').addEventListener('change', syncCardioDateShortcuts);
   document.getElementById('cardioModal').classList.remove('hidden');
 }
 function closeCardioModal() { document.getElementById('cardioModal').classList.add('hidden'); }
@@ -1159,18 +1080,15 @@ function selectCardioType(t) {
 }
 function saveCardio() {
   const mins = parseInt(document.getElementById('cardioDuration').value)||0;
+  const distance = parseFloat(document.getElementById('cardioDistance').value)||0;
   if (mins<1) { alert('Enter a duration.'); return; }
-  state.cardio.push({ date:document.getElementById('cardioDate').value||todayStr(), minutes:mins, type:cardioType });
+  state.cardio.push({ date:document.getElementById('cardioDate').value||todayStr(), minutes:mins, distance, distanceUnit:document.getElementById('cardioDistanceUnit').value.trim(), type:cardioType });
   saveState(state);
   closeCardioModal();
   renderAll();
 }
 
-// ── HISTORY ───────────────────────────────────────────────────────────────
-function toggleHistory() {
-  historyExpanded = !historyExpanded;
-  buildHistory();
-}
+function toggleHistory() { historyExpanded = !historyExpanded; buildHistory(); }
 function deleteLog(idx) {
   if (!confirm('Delete this workout?')) return;
   state.logs.splice(idx,1);
@@ -1188,45 +1106,84 @@ function buildHistory() {
   const btn = document.getElementById('historyToggleBtn');
   const indexed = state.logs.map((l,i)=>({...l,_idx:i})).sort((a,b)=>b.date.localeCompare(a.date)||b._idx-a._idx);
   const shown = historyExpanded ? indexed : indexed.slice(0,5);
-
   if (indexed.length > 5) {
     btn.style.display = '';
     btn.textContent = historyExpanded ? 'Show less' : `Show all (${indexed.length})`;
-  } else {
-    btn.style.display = 'none';
-  }
-
+  } else btn.style.display = 'none';
   if (!indexed.length) {
     container.innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center;padding:20px 0;">No workouts logged yet.</div>';
     return;
   }
-
   const intensityColor = i => i==='light'?'var(--blue)':i==='heavy'?'var(--red)':'var(--amber)';
-
   container.innerHTML = shown.map(l => {
-    const names = l.muscles.map(id=>MUSCLES.find(m=>m.id===id)?.name||id).join(', ');
+    const names = l.muscles.map(getMuscleName).join(', ');
     const iColor = intensityColor(l.intensity||'moderate');
-    let exHtml = '';
-    if (l.exercises && l.exercises.length) {
-      exHtml = `<div class="history-exercises">${l.exercises.map(ex => {
-        const sets = ex.sets.map(s=>(s.weight?`${s.weight}${state.weightUnit}×`:'')+s.reps).join(' · ');
-        return `<div class="history-ex-row"><span class="history-ex-name">${ex.name}</span> <span class="history-ex-sets">${sets}</span></div>`;
-      }).join('')}</div>`;
-    }
-    return `<div class="history-entry">
-      <div class="history-header">
-        <div>
-          <div class="history-date">${friendlyDate(l.date)}<span class="history-full-date">${l.date}</span></div>
-          <div class="history-meta">${names} · <span style="color:${iColor}">${l.intensity||'moderate'}</span></div>
-        </div>
-        <button class="btn-x" style="font-size:20px;color:rgba(255,255,255,0.2)" onclick="deleteLog(${l._idx})">×</button>
-      </div>
-      ${exHtml}
-    </div>`;
+    const exHtml = l.exercises && l.exercises.length ? `<div class="history-exercises">${l.exercises.map(ex => { const sets = ex.sets.map(s=>(s.weight?`${s.weight}${state.weightUnit}×`:'')+s.reps).join(' · '); return `<div class="history-ex-row"><span class="history-ex-name">${ex.name}</span> <span class="history-ex-sets">${sets}</span></div>`; }).join('')}</div>` : '';
+    return `<div class="history-entry"><div class="history-header"><div><div class="history-date">${friendlyDate(l.date)}<span class="history-full-date">${l.date}</span></div><div class="history-meta">${names} · <span style="color:${iColor}">${l.intensity||'moderate'}</span></div></div><button class="btn-x" style="font-size:20px;color:rgba(255,255,255,0.2)" onclick="deleteLog(${l._idx})">×</button></div>${exHtml}</div>`;
   }).join('');
 }
 
-// ── SETTINGS ──────────────────────────────────────────────────────────────
+function buildAnalytics() {
+  document.getElementById('analyticsSub').textContent = `${state.logs.length} workouts · ${state.cardio.length} cardio sessions`;
+  const stats = [
+    { label:'workouts logged', value: state.logs.length },
+    { label:'unique lifts', value: Object.values(state.exerciseSuggestions).flat().filter((v,i,a)=>a.indexOf(v)===i).length },
+    { label:'cardio mins', value: state.cardio.reduce((sum, c)=>sum + (Number(c.minutes)||0), 0) },
+    { label:'cardio distance', value: state.cardio.reduce((sum, c)=>sum + (Number(c.distance)||0), 0).toFixed(1).replace(/\.0$/, '') }
+  ];
+  document.getElementById('analyticsStats').innerHTML = stats.map(s => `<div class="analytics-stat"><div class="analytics-stat-value">${s.value || 0}</div><div class="analytics-stat-label">${s.label}</div></div>`).join('');
+
+  const exerciseMap = new Map();
+  state.logs.forEach(log => {
+    (log.exercises || []).forEach(ex => {
+      const key = slugifyExercise(ex.name);
+      const topSet = (ex.sets || []).reduce((best, set) => {
+        const score = (Number(set.weight)||0) * (Number(set.reps)||0);
+        const bestScore = (Number(best.weight)||0) * (Number(best.reps)||0);
+        return score >= bestScore ? set : best;
+      }, ex.sets?.[0] || { weight:0, reps:0 });
+      if (!exerciseMap.has(key)) exerciseMap.set(key, { name: ex.name, muscles: new Set(), points: [] });
+      const bucket = exerciseMap.get(key);
+      log.muscles.forEach(m => bucket.muscles.add(getMuscleName(m)));
+      bucket.points.push({ date: log.date, weight: Number(topSet.weight)||0, reps: Number(topSet.reps)||0 });
+    });
+  });
+  const strengthRows = [...exerciseMap.values()].sort((a,b)=>b.points.length-a.points.length).map(ex => {
+    const points = ex.points.sort((a,b)=>a.date.localeCompare(b.date)).slice(-6);
+    const maxWeight = Math.max(...points.map(p=>p.weight), 1);
+    const bars = points.map(p => {
+      const h = Math.max(12, Math.round((p.weight || 1) / maxWeight * 70));
+      return `<div class="trend-bar" style="height:${h}px"><div class="trend-bar-value">${p.weight}${state.weightUnit} × ${p.reps}</div><div class="trend-bar-label">${new Date(p.date+'T00:00:00').toLocaleDateString('en-US',{month:'numeric',day:'numeric'})}</div></div>`;
+    }).join('');
+    const bestWeight = Math.max(...points.map(p=>p.weight), 0);
+    const bestReps = Math.max(...points.map(p=>p.reps), 0);
+    return `<div class="exercise-analytics-row"><div class="exercise-analytics-title"><div><div class="exercise-analytics-name">${ex.name}</div><div class="exercise-analytics-muscle">${[...ex.muscles].join(', ')}</div></div><div class="exercise-analytics-muscle">Best ${bestWeight}${state.weightUnit} · ${bestReps} reps</div></div><div class="trend-line">${bars}</div></div>`;
+  }).join('');
+  document.getElementById('strengthAnalyticsList').innerHTML = strengthRows || '<div class="analytics-empty">Log a few lifts and I’ll chart your top sets here.</div>';
+
+  const cardioMap = new Map();
+  state.cardio.forEach(entry => {
+    const key = entry.type || 'Other';
+    if (!cardioMap.has(key)) cardioMap.set(key, { type:key, unit:entry.distanceUnit || '', points:[] });
+    const bucket = cardioMap.get(key);
+    if (!bucket.unit && entry.distanceUnit) bucket.unit = entry.distanceUnit;
+    bucket.points.push({ date:entry.date, minutes:Number(entry.minutes)||0, distance:Number(entry.distance)||0 });
+  });
+  const cardioRows = [...cardioMap.values()].sort((a,b)=>b.points.length-a.points.length).map(cardio => {
+    const points = cardio.points.sort((a,b)=>a.date.localeCompare(b.date)).slice(-6);
+    const maxDistance = Math.max(...points.map(p=>p.distance), 1);
+    const bars = points.map(p => {
+      const basis = p.distance || p.minutes || 1;
+      const h = Math.max(12, Math.round(basis / Math.max(maxDistance, ...points.map(x=>x.minutes), 1) * 70));
+      return `<div class="trend-bar cardio" style="height:${h}px"><div class="trend-bar-value">${p.minutes}m${p.distance ? ` · ${formatDistance(p.distance, cardio.unit)}` : ''}</div><div class="trend-bar-label">${new Date(p.date+'T00:00:00').toLocaleDateString('en-US',{month:'numeric',day:'numeric'})}</div></div>`;
+    }).join('');
+    const totalMinutes = points.reduce((s,p)=>s+p.minutes,0);
+    const totalDistance = points.reduce((s,p)=>s+p.distance,0);
+    return `<div class="cardio-analytics-row"><div class="cardio-analytics-title"><div><div class="cardio-analytics-name">${cardio.type}</div><div class="cardio-analytics-meta">${points.length} recent sessions</div></div><div class="cardio-analytics-meta">${totalMinutes} min${totalDistance ? ` · ${formatDistance(totalDistance, cardio.unit)}` : ''}</div></div><div class="trend-line">${bars}</div></div>`;
+  }).join('');
+  document.getElementById('cardioAnalyticsList').innerHTML = cardioRows || '<div class="analytics-empty">Cardio trends will show up here once you log distance and duration.</div>';
+}
+
 function openSettings() {
   document.getElementById('cardioGoalInput').value = state.cardioGoal;
   document.getElementById('unitKg').classList.toggle('active', state.weightUnit==='kg');
@@ -1256,20 +1213,19 @@ function importData(e) {
   const reader = new FileReader();
   reader.onload = ev => {
     try {
-      const imported = JSON.parse(ev.target.result);
+      const imported = hydrateState(JSON.parse(ev.target.result));
       if (!Array.isArray(imported.logs)||!Array.isArray(imported.cardio)) { alert('Invalid backup file.'); return; }
       if (!confirm(`Import ${imported.logs.length} workouts and ${imported.cardio.length} cardio sessions? This replaces all current data.`)) return;
       state = imported;
-      if (!state.cardioGoal) state.cardioGoal = 60;
-      if (!state.weightUnit) state.weightUnit = 'kg';
       saveState(state); closeSettings(); renderAll();
-    } catch { alert('Could not read file.'); }
+    } catch {
+      alert('Could not read file.');
+    }
   };
   reader.readAsText(file);
   e.target.value = '';
 }
 
-// ── VIEW TOGGLE ───────────────────────────────────────────────────────────
 function setView(v) {
   currentView = v; selectedMuscle = null;
   document.getElementById('tabFront').classList.toggle('active', v==='front');
@@ -1277,14 +1233,12 @@ function setView(v) {
   buildBodySvg(); buildMuscleList(); buildDetailPanel();
 }
 
-// ── NOTIFICATIONS ─────────────────────────────────────────────────────────
 function checkNotifBanner() {
-  if ('Notification' in window && Notification.permission==='default' && !state.notifAsked)
-    document.getElementById('notifBanner').classList.remove('hidden');
+  if ('Notification' in window && Notification.permission==='default' && !state.notifAsked) document.getElementById('notifBanner').classList.remove('hidden');
 }
 function requestNotifPermission() {
   Notification.requestPermission().then(p => {
-    state.notifAsked=true; saveState(state);
+    state.notifAsked = true; saveState(state);
     document.getElementById('notifBanner').classList.add('hidden');
     if (p==='granted') scheduleNotifications();
   });
@@ -1296,22 +1250,21 @@ function scheduleNotifications() {
   if (declining.length) new Notification('FORM — Attention needed',{body:`${declining.map(m=>m.name).join(', ')} past optimal window.`,tag:'decline'});
   else if (ready.length>=3) new Notification('FORM — Ready to train',{body:`${ready.length} muscle groups fully recovered.`,tag:'ready'});
 }
-
-// ── DATE DISPLAY ──────────────────────────────────────────────────────────
 function updateDate() {
   document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
 }
-
-// ── RENDER ────────────────────────────────────────────────────────────────
 function renderAll() {
   updateDate(); updateStats(); updateCardioRing(); buildWeekBar();
   buildSuggestion(); buildBodySvg(); buildMuscleList(); buildDetailPanel();
   buildHistory(); checkNotifBanner();
+  if (activeScreen === 'analytics') buildAnalytics();
 }
 
 document.getElementById('workoutModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeWorkoutModal(); });
 document.getElementById('cardioModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeCardioModal(); });
 document.getElementById('settingsModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeSettings(); });
+document.getElementById('workoutDate').addEventListener('change', syncWorkoutDateShortcuts);
+document.getElementById('cardioDate').addEventListener('change', syncCardioDateShortcuts);
 
 renderAll();
 syncDown();
