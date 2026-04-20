@@ -53,6 +53,7 @@ section { padding: 0 16px 20px; }
 .card { background: #111111; border-radius: var(--r); padding: 16px; }
 .card + .card { margin-top: 10px; }
 .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 3px; color: rgba(255,255,255,0.45); margin-bottom: 12px; font-weight: 600; }
+.week-card { min-height: 82px; }
 
 .cardio-section { padding: 0 16px 20px; }
 .cardio-card { background: #111111; border-radius: var(--r); padding: 20px; display: flex; align-items: center; gap: 20px; }
@@ -327,7 +328,7 @@ section { padding: 0 16px 20px; }
         <div class="streak-label">cardio mins</div>
       </div>
     </div>
-    <div class="card" id="weekCard"></div>
+    <div class="card week-card" id="weekCard"></div>
   </section>
 
   <section>
@@ -865,7 +866,7 @@ function buildWeekBar() {
   const we = new Date(ws); we.setDate(we.getDate()+6);
   const label = weekOffset===0?'This week':weekOffset===1?'Last week':`${fmtShort(ws)} – ${fmtShort(we)}`;
   const days = ['M','T','W','T','F','S','S'];
-  let html = `<div class="week-nav"><button class="week-nav-btn" onclick="changeWeek(1)">‹</button><div class="week-nav-label">${label}</div><button class="week-nav-btn" onclick="changeWeek(-1)"${weekOffset===0?' disabled':''}>›</button></div><div class="week-bar">`;
+  let html = `<div class="card-label">Weekly activity</div><div class="week-nav"><button class="week-nav-btn" onclick="changeWeek(1)">‹</button><div class="week-nav-label">${label}</div><button class="week-nav-btn" onclick="changeWeek(-1)"${weekOffset===0?' disabled':''}>›</button></div><div class="week-bar">`;
   for (let i=0; i<7; i++) {
     const d = new Date(ws); d.setDate(d.getDate()+i);
     const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
