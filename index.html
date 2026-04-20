@@ -569,6 +569,36 @@ const SUPA_URL = 'https://fwjmeuaxvrxgvjkqnltk.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3am1ldWF4dnJ4Z3Zqa3FubHRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDY2NjksImV4cCI6MjA5MjAyMjY2OX0._DA8CafKrYsYQ-Lg1KeYPTaE8L4OHi-oF0XoeSgZl8M';
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 
+const LEGACY_STORAGE_KEYS = ['form_state', 'thor_form_state', 'thor_hammer_state'];
+
+function deepMergeState(base, incoming) {
+  const next = hydrateState(JSON.parse(JSON.stringify(base || {})));
+  const inc = hydrateState(incoming || {});
+  if ((!next.logs || !next.logs.length) && inc.logs?.length) next.logs = inc.logs;
+  if ((!next.cardio || !next.cardio.length) && inc.cardio?.length) next.cardio = inc.cardio;
+  if ((!next._savedAt || next._savedAt < inc._savedAt) && (inc.logs?.length || inc.cardio?.length)) next._savedAt = inc._savedAt;
+  if ((!next.exerciseSuggestions || !Object.keys(next.exerciseSuggestions).length) && inc.exerciseSuggestions) next.exerciseSuggestions = inc.exerciseSuggestions;
+  if (!next.cardioGoal && inc.cardioGoal) next.cardioGoal = inc.cardioGoal;
+  if (!next.weightUnit && inc.weightUnit) next.weightUnit = inc.weightUnit;
+  if (!next.notifAsked && inc.notifAsked) next.notifAsked = inc.notifAsked;
+  return hydrateState(next);
+}
+
+function recoverLegacyState() {
+  let recovered = null;
+  try {
+    for (const key of LEGACY_STORAGE_KEYS) {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+      try {
+        const parsed = hydrateState(JSON.parse(raw));
+        if ((parsed.logs?.length || 0) || (parsed.cardio?.length || 0)) recovered = deepMergeState(recovered || {}, parsed);
+      } catch {}
+    }
+  } catch {}
+  return recovered;
+}
+
 function setSyncStatus(s) {
   const el = document.getElementById('syncStatus');
   if (!el) return;
@@ -592,13 +622,19 @@ async function syncUp(s) {
 async function syncDown() {
   try {
     const { data, error } = await sb.from('form_state').select('data').eq('id',1).single();
-    if (error || !data?.data) return;
+    const local = loadState();
+    if (error || !data?.data) {
+      state = local;
+      renderAll();
+      return;
+    }
     const remote = hydrateState(data.data);
     if (!Array.isArray(remote.logs)) return;
-    const local = loadState();
-    if (!local._savedAt || !remote._savedAt || remote._savedAt > local._savedAt) {
-      state = remote;
+    const merged = deepMergeState(remote, local);
+    if (!local._savedAt || !remote._savedAt || remote._savedAt > local._savedAt || (merged.logs.length !== remote.logs.length) || (merged.cardio.length !== remote.cardio.length)) {
+      state = merged;
       localStorage.setItem('form_state', JSON.stringify(state));
+      if (merged.logs.length !== remote.logs.length || merged.cardio.length !== remote.cardio.length) syncUp(state);
       renderAll();
       setSyncStatus('synced');
     }
@@ -639,8 +675,15 @@ function hydrateState(raw) {
 }
 
 function loadState() {
-  try { return hydrateState(JSON.parse(localStorage.getItem('form_state')) || {}); }
-  catch { return hydrateState({}); }
+  let primary;
+  try { primary = hydrateState(JSON.parse(localStorage.getItem('form_state')) || {}); }
+  catch { primary = hydrateState({}); }
+  const recovered = recoverLegacyState();
+  const merged = recovered ? deepMergeState(primary, recovered) : primary;
+  if ((recovered?.logs?.length || recovered?.cardio?.length) && ((primary.logs?.length || 0)!==(merged.logs?.length || 0) || (primary.cardio?.length || 0)!==(merged.cardio?.length || 0))) {
+    localStorage.setItem('form_state', JSON.stringify(merged));
+  }
+  return merged;
 }
 function saveState(s) {
   s._savedAt = new Date().toISOString();
