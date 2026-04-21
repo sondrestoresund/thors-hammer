@@ -328,14 +328,14 @@ section { padding: 0 16px 20px; }
         <div class="streak-label">cardio mins</div>
       </div>
     </div>
-    <div class="card week-card" id="weekCard"></div>
+    <div class="card week-card" id="weekCard"><div class="card-label">Weekly activity</div><div class="week-nav"><button class="week-nav-btn" type="button">‹</button><div class="week-nav-label">This week</div><button class="week-nav-btn" type="button" disabled>›</button></div><div class="week-bar"><div class="week-day"><div class="week-day-label">M</div><div class="week-day-dot"></div></div><div class="week-day"><div class="week-day-label">T</div><div class="week-day-dot"></div></div><div class="week-day"><div class="week-day-label">W</div><div class="week-day-dot"></div></div><div class="week-day"><div class="week-day-label">T</div><div class="week-day-dot"></div></div><div class="week-day"><div class="week-day-label">F</div><div class="week-day-dot"></div></div><div class="week-day"><div class="week-day-label">S</div><div class="week-day-dot"></div></div><div class="week-day"><div class="week-day-label">S</div><div class="week-day-dot"></div></div></div></div>
   </section>
 
   <section>
     <div class="suggestion-card">
       <div class="suggestion-label">Today's suggestion</div>
-      <div class="suggestion-text" id="suggestionText"> </div>
-      <div class="suggestion-muscles" id="suggestionPills"></div>
+      <div class="suggestion-text" id="suggestionText">Log your first workout to start tracking recovery and momentum.</div>
+      <div class="suggestion-muscles" id="suggestionPills"><span class="pill pill-green">Start strong</span></div>
     </div>
   </section>
 
@@ -370,9 +370,9 @@ section { padding: 0 16px 20px; }
     </div>
     <div class="body-container">
       <div class="body-svg-area">
-        <svg id="bodySvg" viewBox="0 0 160 330" width="140" height="272" xmlns="http://www.w3.org/2000/svg"></svg>
+        <svg id="bodySvg" viewBox="0 0 160 330" width="140" height="272" xmlns="http://www.w3.org/2000/svg"><rect x="66" y="18" width="28" height="32" rx="12" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" /><rect x="56" y="48" width="48" height="18" rx="8" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" /><rect x="42" y="64" width="76" height="96" rx="18" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" /><rect x="22" y="74" width="20" height="104" rx="10" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" /><rect x="118" y="74" width="20" height="104" rx="10" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" /><rect x="50" y="160" width="60" height="82" rx="16" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" /><rect x="56" y="238" width="20" height="72" rx="10" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" /><rect x="84" y="238" width="20" height="72" rx="10" fill="#d4cdc6" stroke="rgba(0,0,0,0.12)" /><rect x="56" y="68" width="48" height="26" rx="10" fill="#1a7a3c" fill-opacity="0.88" stroke="rgba(0,0,0,0.18)" stroke-width="0.8" /><rect x="42" y="64" width="76" height="16" rx="10" fill="#1a7a3c" fill-opacity="0.88" stroke="rgba(0,0,0,0.18)" stroke-width="0.8" /><rect x="26" y="82" width="18" height="42" rx="10" fill="#1a7a3c" fill-opacity="0.88" stroke="rgba(0,0,0,0.18)" stroke-width="0.8" /><rect x="116" y="82" width="18" height="42" rx="10" fill="#d97706" fill-opacity="0.88" stroke="rgba(0,0,0,0.18)" stroke-width="0.8" /><rect x="62" y="102" width="36" height="52" rx="10" fill="#cc2200" fill-opacity="0.88" stroke="rgba(0,0,0,0.18)" stroke-width="0.8" /><rect x="56" y="168" width="48" height="62" rx="10" fill="#1a7a3c" fill-opacity="0.88" stroke="rgba(0,0,0,0.18)" stroke-width="0.8" /><rect x="60" y="236" width="40" height="54" rx="10" fill="#d97706" fill-opacity="0.88" stroke="rgba(0,0,0,0.18)" stroke-width="0.8" /></svg>
       </div>
-      <div class="muscle-list" id="muscleList"></div>
+      <div class="muscle-list" id="muscleList"><div class="muscle-row"><div class="muscle-dot" style="background:var(--green)"></div><div class="muscle-name">Chest</div><div class="muscle-time">never</div></div><div class="muscle-row"><div class="muscle-dot" style="background:var(--green)"></div><div class="muscle-name">Shoulders</div><div class="muscle-time">never</div></div><div class="muscle-row"><div class="muscle-dot" style="background:var(--green)"></div><div class="muscle-name">Biceps</div><div class="muscle-time">never</div></div><div class="muscle-row"><div class="muscle-dot" style="background:var(--green)"></div><div class="muscle-name">Triceps</div><div class="muscle-time">never</div></div><div class="muscle-row"><div class="muscle-dot" style="background:var(--green)"></div><div class="muscle-name">Core</div><div class="muscle-time">never</div></div><div class="muscle-row"><div class="muscle-dot" style="background:var(--green)"></div><div class="muscle-name">Quads</div><div class="muscle-time">never</div></div><div class="muscle-row"><div class="muscle-dot" style="background:var(--green)"></div><div class="muscle-name">Calves</div><div class="muscle-time">never</div></div></div>
     </div>
     <div id="detailPanel"></div>
   </section>
