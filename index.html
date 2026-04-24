@@ -203,9 +203,10 @@ section { padding: 0 16px 20px; }
 .logged-ex-detail { font-size: 10px; color: var(--muted); margin-top: 2px; }
 .btn-x { background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; font-size: 18px; line-height: 1; padding: 2px 4px; }
 .btn-x:active { color: var(--red); }
-.exercise-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-.exercise-chip { border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); border-radius: 999px; padding: 7px 10px; font-family: var(--font-display); font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; cursor: pointer; }
+.exercise-suggestions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-bottom: 10px; }
+.exercise-chip { border: 1px solid rgba(255,255,255,0.12); background: #1e1e1e; color: rgba(255,255,255,0.82); border-radius: var(--r-sm); padding: 11px 8px; min-height: 48px; font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; cursor: pointer; text-align: center; font-weight: 700; }
 .exercise-chip:hover { background: rgba(255,255,255,0.1); }
+.exercise-chip:active { transform: scale(0.98); }
 .exercise-helper { font-size: 10px; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
 .exercise-search-wrap { position: relative; }
 .exercise-dropdown { position: absolute; left: 0; right: 0; top: calc(100% - 2px); background: #181818; border: 1px solid rgba(255,255,255,0.12); border-top: none; border-radius: 0 0 var(--r-sm) var(--r-sm); overflow: hidden; z-index: 20; box-shadow: 0 16px 30px rgba(0,0,0,0.25); }
@@ -433,9 +434,9 @@ section { padding: 0 16px 20px; }
     <div class="modal-section">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
         <span class="modal-section-label" style="margin-bottom:0">Exercises <span style="color:rgba(255,255,255,0.25);font-size:8px;letter-spacing:1px">OPTIONAL</span></span>
-        <button class="btn" id="exToggleBtn" style="padding:4px 10px;font-size:10px;letter-spacing:1px;" onclick="toggleExSection()">+ Add</button>
+        <button class="btn" id="exToggleBtn" style="padding:4px 10px;font-size:10px;letter-spacing:1px;" onclick="toggleExSection()">− Collapse</button>
       </div>
-      <div id="exSection" class="hidden ex-section">
+      <div id="exSection" class="ex-section">
         <div class="exercise-helper" id="exerciseHelperText">Select one or more muscles to unlock saved exercise suggestions.</div>
         <div class="exercise-suggestions" id="exerciseSuggestionChips"></div>
         <div class="exercise-search-wrap">
@@ -454,7 +455,7 @@ section { padding: 0 16px 20px; }
           </div>
           <div class="ex-field">
             <div class="ex-field-label">sets</div>
-            <input class="ex-num" type="number" id="exSets" placeholder="3" min="1" value="3"/>
+            <input class="ex-num" type="number" id="exSets" placeholder="—" min="1"/>
           </div>
           <div class="ex-spacer"></div>
           <button class="btn btn-primary" style="padding:9px 14px;align-self:flex-end;" onclick="addExercise()">Add</button>
@@ -1039,7 +1040,7 @@ function updateExerciseSuggestionsUI() {
   const options = getSavedExercisesForMuscles(modalChecked);
   datalist.innerHTML = options.map(name => `<option value="${name}"></option>`).join('');
   chips.innerHTML = options.slice(0,8).map(name => `<button type="button" class="exercise-chip" onclick="pickSuggestedExercise('${name.replace(/'/g, "\\'")}')">${name}</button>`).join('');
-  helper.textContent = modalChecked.length ? (options.length ? 'Tap a saved lift or type a new one. Saved exercises learn by body part.' : 'No saved exercises for this muscle yet. Log one and it will appear next time.') : 'Select one or more muscles to unlock saved exercise suggestions.';
+  helper.textContent = modalChecked.length ? (options.length ? 'Tap a saved exercise block or type a new one. Saved exercises learn by body part.' : 'No saved exercises for this muscle yet. Log one and it will appear here next time.') : 'Select one or more muscles to show saved exercises for those muscle groups.';
 }
 function pickSuggestedExercise(name) {
   document.getElementById('exName').value = name;
@@ -1067,18 +1068,18 @@ function openWorkoutModal(editIdx = null) {
   editingWorkoutIdx = editIdx;
   modalChecked = [];
   modalExercises = [];
-  exSectionOpen = false;
+  exSectionOpen = true;
   modalIntensity = 'moderate';
   document.getElementById('muscleCheckGrid').innerHTML = MUSCLES.map(m => `<div class="muscle-check" id="mc_${m.id}" onclick="toggleMuscleCheck('${m.id}')">${m.name}</div>`).join('');
   document.querySelectorAll('#modalIntensityRow .intensity-btn').forEach(b => b.classList.remove('sel-light','sel-moderate','sel-heavy'));
   document.querySelector('[data-intensity="moderate"]').classList.add('sel-moderate');
-  document.getElementById('exSection').classList.add('hidden');
-  document.getElementById('exToggleBtn').textContent = '+ Add';
+  document.getElementById('exSection').classList.remove('hidden');
+  document.getElementById('exToggleBtn').textContent = '− Collapse';
   document.getElementById('exList').innerHTML = '';
   document.getElementById('exName').value = '';
   document.getElementById('exWeight').value = '';
   document.getElementById('exReps').value = '';
-  document.getElementById('exSets').value = '3';
+  document.getElementById('exSets').value = '';
   document.getElementById('weightUnitLabel').textContent = state.weightUnit;
   document.getElementById('workoutDate').max = todayStr();
   document.querySelector('#workoutModal .btn.btn-primary').textContent = editIdx === null ? 'Save' : 'Update';
@@ -1108,7 +1109,7 @@ function resetExerciseInputs() {
   document.getElementById('exName').value = '';
   document.getElementById('exWeight').value = '';
   document.getElementById('exReps').value = '';
-  document.getElementById('exSets').value = '3';
+  document.getElementById('exSets').value = '';
   editingExerciseRef = null;
   document.querySelector('#exSection .btn.btn-primary').textContent = 'Add';
   updateExerciseDropdown();
@@ -1117,9 +1118,10 @@ function addExercise() {
   const name = document.getElementById('exName').value.trim();
   const weight = parseFloat(document.getElementById('exWeight').value) || 0;
   const reps = parseInt(document.getElementById('exReps').value) || 0;
-  const sets = parseInt(document.getElementById('exSets').value) || 3;
+  const sets = parseInt(document.getElementById('exSets').value) || 0;
   if (!name) { document.getElementById('exName').focus(); return; }
   if (!reps) { document.getElementById('exReps').focus(); return; }
+  if (!sets) { document.getElementById('exSets').focus(); return; }
   const setsArr = Array.from({length:sets}, ()=>({weight, reps}));
   if (editingExerciseRef !== null) modalExercises[editingExerciseRef] = { name, sets:setsArr };
   else modalExercises.push({ name, sets:setsArr });
