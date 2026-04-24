@@ -632,16 +632,28 @@ async function syncDown() {
     const remote = hydrateState(data.data);
     if (!Array.isArray(remote.logs)) return;
     const merged = deepMergeState(remote, local);
-    if (!local._savedAt || !remote._savedAt || remote._savedAt > local._savedAt || (merged.logs.length !== remote.logs.length) || (merged.cardio.length !== remote.cardio.length)) {
-      state = merged;
-      localStorage.setItem('form_state', JSON.stringify(state));
-      if (merged.logs.length !== remote.logs.length || merged.cardio.length !== remote.cardio.length) syncUp(state);
-      renderAll();
-      setSyncStatus('synced');
-    }
+    const localJson = JSON.stringify(local);
+    const remoteJson = JSON.stringify(remote);
+    const mergedJson = JSON.stringify(merged);
+    state = merged;
+    if (mergedJson !== localJson) localStorage.setItem('form_state', mergedJson);
+    if (mergedJson !== remoteJson) syncUp(state);
+    renderAll();
+    setSyncStatus('synced');
   } catch {
     setSyncStatus('error');
   }
+}
+
+let refreshStateTimer = null;
+function refreshFromStorage() {
+  state = loadState();
+  renderAll();
+  syncDown();
+}
+function scheduleStateRefresh() {
+  clearTimeout(refreshStateTimer);
+  refreshStateTimer = setTimeout(refreshFromStorage, 120);
 }
 
 const MUSCLES = [
@@ -1400,6 +1412,11 @@ document.getElementById('exName').addEventListener('blur', ()=>setTimeout(()=>do
 
 renderAll();
 syncDown();
+window.addEventListener('focus', scheduleStateRefresh);
+window.addEventListener('pageshow', scheduleStateRefresh);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') scheduleStateRefresh();
+});
 </script>
 </body>
 </html>
